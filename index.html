@@ -1,0 +1,3878 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#22c55e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="החזר מס">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<title>מחשבון החזר מס הכנסה</title>
+<style>
+/* ========== CSS VARIABLES ========== */
+:root {
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --glass-blur: blur(16px);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+[data-theme="dark"] {
+  --bg-primary: #06080f;
+  --bg-secondary: #0e1525;
+  --bg-card: rgba(22, 33, 55, 0.7);
+  --bg-card-hover: rgba(28, 42, 68, 0.8);
+  --bg-card-solid: #162137;
+  --bg-input: #0a1020;
+  --bg-section: #111d33;
+  --bg-glass: rgba(14, 21, 37, 0.65);
+  --border: rgba(42, 53, 80, 0.6);
+  --border-active: #22c55e;
+  --border-glow: rgba(34, 197, 94, 0.4);
+  --text-primary: #edf2f7;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #22c55e;
+  --accent-hover: #16a34a;
+  --accent-light: rgba(34,197,94,0.12);
+  --accent-glow: rgba(34,197,94,0.25);
+  --success: #10b981;
+  --success-bg: rgba(16,185,129,0.12);
+  --danger: #ef4444;
+  --danger-bg: rgba(239,68,68,0.12);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245,158,11,0.12);
+  --purple: #8b5cf6;
+  --purple-bg: rgba(139,92,246,0.12);
+  --gradient-hero: linear-gradient(135deg, #0b1a15 0%, #06080f 50%, #0d0f1a 100%);
+  --gradient-card: linear-gradient(145deg, rgba(22,33,55,0.9) 0%, rgba(14,21,37,0.7) 100%);
+  --gradient-accent: linear-gradient(135deg, #22c55e, #10b981);
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-glow: 0 0 20px rgba(34,197,94,0.15);
+  --tab-bg: #111d33;
+  --tab-active: #22c55e;
+  --scrollbar-track: #0e1525;
+  --scrollbar-thumb: #2a3550;
+}
+[data-theme="light"] {
+  --bg-primary: #f4f7fb;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(255,255,255,0.85);
+  --bg-card-hover: rgba(248,250,252,0.9);
+  --bg-card-solid: #ffffff;
+  --bg-input: #f0f4f9;
+  --bg-section: #f8fafc;
+  --bg-glass: rgba(255,255,255,0.7);
+  --border: rgba(226,232,240,0.8);
+  --border-active: #22c55e;
+  --border-glow: rgba(34, 197, 94, 0.3);
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-muted: #94a3b8;
+  --accent: #22c55e;
+  --accent-hover: #16a34a;
+  --accent-light: rgba(34,197,94,0.07);
+  --accent-glow: rgba(34,197,94,0.15);
+  --success: #059669;
+  --success-bg: rgba(5,150,105,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --warning: #d97706;
+  --warning-bg: rgba(217,119,6,0.08);
+  --purple: #7c3aed;
+  --purple-bg: rgba(124,58,237,0.08);
+  --gradient-hero: linear-gradient(135deg, #e6f9ed 0%, #f4f7fb 50%, #eef2ff 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.8) 100%);
+  --gradient-accent: linear-gradient(135deg, #22c55e, #10b981);
+  --shadow: 0 8px 32px rgba(0,0,0,0.06);
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.04);
+  --shadow-glow: 0 0 20px rgba(34,197,94,0.08);
+  --tab-bg: #e8ecf1;
+  --tab-active: #22c55e;
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+}
+
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background 0.4s ease, color 0.4s ease;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::selection { background: var(--accent-light); color: var(--accent); }
+@keyframes fadeInScale { from { opacity: 0; transform: scale(0.95) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes countUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ========== HEADER ========== */
+.app-header {
+  background: var(--bg-glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.app-header.scrolled { padding: 10px 28px; box-shadow: var(--shadow-sm); }
+.app-header h1 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: -0.02em;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.app-header h1 .header-emoji { -webkit-text-fill-color: initial; }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  position: relative;
+  width: 56px;
+  height: 28px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  transition: transform var(--transition);
+}
+[data-theme="light"] .theme-toggle::after {
+  transform: translateX(-26px);
+}
+.theme-toggle .icon-sun, .theme-toggle .icon-moon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  line-height: 1;
+}
+.theme-toggle .icon-sun { left: 6px; }
+.theme-toggle .icon-moon { right: 6px; }
+
+/* Export button */
+.btn-export {
+  background: var(--gradient-accent);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-export:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--accent-glow); }
+.btn-export:active { transform: translateY(0); }
+
+/* ========== TABS ========== */
+.tabs-container {
+  background: var(--bg-glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  overflow-x: auto;
+  position: sticky;
+  top: 69px;
+  z-index: 99;
+}
+.tabs {
+  display: flex;
+  gap: 2px;
+  min-width: max-content;
+}
+.tab {
+  padding: 12px 18px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 3px solid transparent;
+  transition: all var(--transition);
+  white-space: nowrap;
+  font-family: inherit;
+}
+.tab:hover { color: var(--text-primary); background: var(--accent-light); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 700;
+}
+.tab.year-tab { font-variant-numeric: tabular-nums; }
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeInScale 0.3s ease both; }
+
+/* ========== CARDS & SECTIONS ========== */
+.section-card {
+  background: var(--gradient-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+.section-card:hover { border-color: var(--border-active); box-shadow: var(--shadow), var(--shadow-glow); }
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+/* ========== FORM ELEMENTS ========== */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 180px 50px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.form-row:last-child { border-bottom: none; }
+.form-row label {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+.form-row .hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+input[type="number"], input[type="text"].input-blue, select {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: 'Segoe UI', monospace;
+  transition: all var(--transition);
+  text-align: left;
+  direction: ltr;
+}
+input[type="number"]:focus, input[type="text"].input-blue:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light), 0 0 12px var(--accent-glow);
+}
+input[type="number"]:hover, input[type="text"].input-blue:hover, select:hover {
+  border-color: var(--text-muted);
+}
+input[type="number"].input-blue, input[type="text"].input-blue {
+  background: rgba(59,130,246,0.08);
+  border-color: rgba(59,130,246,0.3);
+}
+.input-blue.has-formula {
+  background: rgba(168,85,247,0.08);
+  border-color: rgba(168,85,247,0.4);
+  border-style: dashed;
+}
+.input-blue.has-formula:focus {
+  border-color: rgba(168,85,247,0.6);
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.15);
+  border-style: solid;
+}
+.unit { font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+
+/* Computed value */
+.computed-value {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  text-align: left;
+}
+.computed-value.positive { color: var(--success); }
+.computed-value.negative { color: var(--danger); }
+
+/* ========== SUMMARY BOXES ========== */
+.summary-row {
+  display: grid;
+  grid-template-columns: 1fr 180px 50px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  font-weight: 600;
+}
+.summary-row.total {
+  background: var(--accent-light);
+  margin: 8px -24px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+}
+
+/* Hero stat cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--gradient-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInScale 0.5s ease both;
+}
+.stat-card:nth-child(1) { animation-delay: 0s; }
+.stat-card:nth-child(2) { animation-delay: 0.08s; }
+.stat-card:nth-child(3) { animation-delay: 0.16s; }
+.stat-card:nth-child(4) { animation-delay: 0.24s; }
+.stat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow), var(--shadow-glow); }
+.stat-card:hover::after { opacity: 1; }
+.stat-card.positive::after { background: linear-gradient(90deg, #10b981, #34d399); }
+.stat-card.negative::after { background: linear-gradient(90deg, #ef4444, #f87171); }
+.stat-card.purple::after { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.stat-card .stat-value {
+  font-size: 1.9rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  animation: countUp 0.6s ease both;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+}
+.stat-card .stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.stat-card.positive .stat-value { color: var(--success); }
+.stat-card.negative .stat-value { color: var(--danger); }
+.stat-card.info .stat-value { color: var(--accent); }
+.stat-card.purple .stat-value { color: var(--purple); }
+
+/* ========== TABLE STYLES ========== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+.data-table th {
+  background: var(--bg-section);
+  padding: 10px 12px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
+  font-size: 0.8rem;
+}
+.data-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-variant-numeric: tabular-nums;
+}
+.data-table tr:hover td { background: var(--bg-card-hover); }
+
+/* ========== CHECKLIST ========== */
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.checklist-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.checklist-item.checked label { color: var(--text-muted); text-decoration: line-through; }
+.checklist-info { flex: 1; }
+.checklist-info .doc-name { font-weight: 600; font-size: 0.9rem; }
+.checklist-info .doc-detail { font-size: 0.8rem; color: var(--text-secondary); }
+.checklist-info .doc-source { font-size: 0.75rem; color: var(--text-muted); }
+
+/* ========== COMPARISON TABLE ========== */
+.comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 150px 100px 80px;
+  gap: 12px;
+  padding: 10px 0;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); }
+.badge-danger { background: var(--danger-bg); color: var(--danger); }
+
+/* ========== CHART ========== */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 200px;
+  padding: 20px 10px 0;
+  gap: 8px;
+}
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 100px;
+}
+.bar {
+  width: 48px;
+  border-radius: 8px 8px 0 0;
+  transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-height: 2px;
+  position: relative;
+}
+.bar.positive { background: linear-gradient(180deg, #34d399, #059669); box-shadow: 0 -4px 12px rgba(16,185,129,0.2); }
+.bar.negative { background: linear-gradient(180deg, #f87171, #dc2626); box-shadow: 0 -4px 12px rgba(239,68,68,0.2); }
+.bar.zero { background: var(--border); height: 2px !important; }
+.bar-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-weight: 600;
+}
+.bar-value {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  direction: ltr;
+}
+
+/* ========== ACCORDION ========== */
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 12px 0;
+  user-select: none;
+}
+.accordion-header::after {
+  content: '▼';
+  font-size: 0.7rem;
+  transition: transform var(--transition);
+  color: var(--text-muted);
+}
+.accordion-header.collapsed::after { transform: rotate(-90deg); }
+.accordion-body { overflow: hidden; transition: max-height 0.3s ease; }
+.accordion-body.collapsed { max-height: 0 !important; }
+
+/* ========== TIP BOXES ========== */
+/* Toggle switch */
+.toggle-switch { position:relative; display:inline-block; width:44px; height:24px; cursor:pointer; flex-shrink:0; }
+.toggle-switch input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; inset:0; background:var(--border); border-radius:24px; transition:0.3s; }
+.toggle-slider::before { content:''; position:absolute; width:18px; height:18px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:0.3s; }
+.toggle-switch input:checked + .toggle-slider { background:var(--accent); }
+.toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
+
+.tip-box {
+  background: var(--accent-light);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 8px;
+}
+.tip-box.warning {
+  background: var(--warning-bg);
+  border-color: rgba(245,158,11,0.2);
+}
+
+/* ========== PROGRESS BAR ========== */
+.progress-bar-container {
+  background: var(--bg-input);
+  border-radius: 8px;
+  height: 8px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--success));
+  border-radius: 8px;
+  transition: width 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .app-header { padding: 16px; }
+  .app-header h1 { font-size: 1.2rem; }
+  .main-content { padding: 16px; }
+  .form-row { grid-template-columns: 1fr 120px 40px; gap: 8px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .tabs-container { padding: 0 8px; }
+  .tab { padding: 10px 12px; font-size: 0.8rem; }
+}
+
+/* ========== YEAR NAV QUICK ========== */
+.year-quick-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.year-section-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: inherit;
+}
+.year-section-btn:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 2px 8px var(--accent-glow, rgba(99,102,241,0.2)); }
+.year-section-btn:active { transform: translateY(0); }
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ========== LAYOUT WITH SIDEBAR ========== */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+  width: 270px;
+  min-width: 270px;
+  background: var(--bg-glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  transition: transform 0.3s ease;
+}
+.sidebar.collapsed {
+  transform: translateX(270px);
+}
+.sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--gradient-hero);
+}
+.sidebar-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sidebar-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all var(--transition);
+}
+.sidebar-toggle:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+
+.sidebar-actions {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.btn-add-client {
+  width: 100%;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all var(--transition);
+}
+.btn-add-client:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.client-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+.client-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.client-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border);
+}
+.client-item.active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+.client-item .client-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.88rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+.client-item.active .client-avatar {
+  background: var(--accent-hover);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.client-item .client-info {
+  flex: 1;
+  min-width: 0;
+}
+.client-item .client-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.client-item .client-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.client-item .client-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.client-item:hover .client-actions,
+.client-item.active .client-actions {
+  opacity: 1;
+}
+.client-action-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  transition: all var(--transition);
+}
+.client-action-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-input);
+}
+.client-action-btn.delete:hover {
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Main area adjustment */
+.app-main {
+  flex: 1;
+  margin-right: 270px;
+  transition: margin-right 0.3s ease;
+}
+.app-main.expanded {
+  margin-right: 0;
+}
+.app-credit {
+  text-align: center;
+  padding: 24px 16px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  margin-top: 32px;
+}
+
+/* Floating toggle button when sidebar collapsed */
+.sidebar-open-btn {
+  position: fixed;
+  top: 20px;
+  right: 16px;
+  z-index: 150;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+}
+.sidebar-open-btn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+}
+.sidebar-open-btn.visible {
+  display: flex;
+}
+
+/* Modal overlay for rename/delete */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal {
+  background: var(--bg-card-solid, var(--bg-card));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  min-width: 340px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+  animation: fadeInScale 0.3s var(--bounce) both;
+}
+.modal h3 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal input[type="text"] {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  margin-bottom: 16px;
+  direction: rtl;
+}
+.modal input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+.modal-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+.modal-buttons button {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  font-family: inherit;
+  transition: all var(--transition);
+}
+.modal-buttons .btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.modal-buttons .btn-primary:hover { background: var(--accent-hover); }
+.modal-buttons .btn-danger {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+.modal-buttons .btn-danger:hover { background: #dc2626; }
+.modal-buttons .btn-cancel {
+  background: var(--bg-section);
+  color: var(--text-secondary);
+}
+.modal-buttons .btn-cancel:hover { background: var(--bg-card-hover); }
+.modal p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* ========== DOCUMENT UPLOAD ZONE ========== */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: var(--bg-section);
+  margin-bottom: 12px;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  transform: scale(1.01);
+}
+.upload-zone .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+.upload-zone .upload-text { font-size: 0.88rem; color: var(--text-secondary); }
+.upload-zone .upload-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+.uploaded-files { margin-top: 8px; }
+.uploaded-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  transition: all var(--transition);
+}
+.uploaded-file:hover { border-color: var(--accent); }
+.uploaded-file .file-icon { font-size: 1.3rem; }
+.uploaded-file .file-info { flex: 1; min-width: 0; }
+.uploaded-file .file-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.uploaded-file .file-meta { font-size: 0.72rem; color: var(--text-muted); }
+.uploaded-file .file-status {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.uploaded-file .file-status.extracted { background: var(--success-bg); color: var(--success); }
+.uploaded-file .file-status.pending { background: var(--warning-bg); color: var(--warning); }
+.uploaded-file .file-status.error { background: var(--danger-bg); color: var(--danger); }
+.uploaded-file .file-actions {
+  display: flex;
+  gap: 4px;
+}
+.file-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  transition: all var(--transition);
+  color: var(--text-muted);
+}
+.file-action-btn:hover { color: var(--text-primary); background: var(--bg-card-hover); }
+.file-action-btn.delete:hover { color: var(--danger); background: var(--danger-bg); }
+
+/* Extraction preview */
+.extract-preview {
+  margin-top: 12px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.extract-preview-header {
+  background: var(--accent-light);
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.extract-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 0.85rem;
+}
+.extract-row label { color: var(--text-secondary); }
+.extract-row .extract-value {
+  font-weight: 600;
+  color: var(--success);
+  direction: ltr;
+  text-align: left;
+}
+.extract-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.extract-actions {
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+}
+
+/* Custom checklist per year */
+.add-doc-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.add-doc-row input[type="text"] {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-family: inherit;
+  direction: rtl;
+}
+.add-doc-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.add-doc-btn {
+  padding: 8px 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+.add-doc-btn:hover { background: var(--accent-hover); }
+
+/* Responsive sidebar */
+@media (max-width: 768px) {
+  .sidebar { width: 240px; min-width: 240px; }
+  .app-main { margin-right: 0; }
+  .sidebar:not(.collapsed) ~ .app-main { margin-right: 0; }
+  .stat-cards { grid-template-columns: repeat(2, 1fr); }
+  .app-header h1 { font-size: 1.1rem; }
+}
+@media (max-width: 480px) {
+  .stat-cards { grid-template-columns: 1fr; }
+  .summary-cards { grid-template-columns: 1fr; }
+  .tabs { gap: 4px; padding: 4px; }
+  .tab-btn { padding: 8px 12px; font-size: 0.75rem; }
+  .card { padding: 16px; }
+  .app-header { padding: 12px 16px; }
+  .app-header h1 { font-size: 1rem; }
+}
+
+/* Print styles */
+@media print {
+  body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+  .sidebar, .app-header, .tabs, .tab-btn, .btn-export, .btn-import,
+  .theme-toggle, .toast, .tip-box, .add-doc-btn, input[type="file"],
+  .toggle-switch, .hint { display: none !important; }
+  .app-main { margin: 0 !important; padding: 0 !important; }
+  .tab-content { display: block !important; padding: 0 !important; }
+  .tab-pane { display: none !important; }
+  .tab-pane.print-active { display: block !important; }
+  .card { break-inside: avoid; border: 1px solid #ccc !important; box-shadow: none !important;
+    background: #fff !important; margin-bottom: 12pt; page-break-inside: avoid; }
+  .summary-row { border-bottom: 1px solid #eee; }
+  .stat-card { border: 1px solid #ccc !important; box-shadow: none !important; background: #fff !important; }
+  .computed-value, .stat-value { color: #000 !important; }
+  .positive { color: #006600 !important; }
+  .negative { color: #cc0000 !important; }
+  .form-row input, .form-row select { border: none !important; background: transparent !important;
+    box-shadow: none !important; padding: 0 !important; text-align: left; }
+  .print-header { display: block !important; text-align: center; margin-bottom: 20pt;
+    border-bottom: 2px solid #000; padding-bottom: 10pt; }
+  .print-header h1 { font-size: 16pt; margin: 0; }
+  .print-header p { font-size: 10pt; margin: 4pt 0 0; color: #666; }
+  a { color: #000 !important; text-decoration: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+
+<!-- SIDEBAR - Client Management -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2>👥 לקוחות</h2>
+    <button class="sidebar-toggle" onclick="toggleSidebar()" title="סגור תפריט">✕</button>
+  </div>
+  <div class="sidebar-actions">
+    <button class="btn-add-client" onclick="showAddClientModal()">➕ לקוח חדש</button>
+  </div>
+  <div class="client-list" id="clientList">
+    <!-- Rendered by JS -->
+  </div>
+  <div class="sidebar-footer" id="sidebarFooter">
+    <!-- Client count rendered by JS -->
+  </div>
+</aside>
+
+<!-- Floating button to reopen sidebar -->
+<button class="sidebar-open-btn" id="sidebarOpenBtn" onclick="toggleSidebar()">👥</button>
+
+<!-- MAIN AREA -->
+<div class="app-main" id="appMain">
+
+<!-- HEADER -->
+<header class="app-header">
+  <h1><span class="header-emoji">📊</span> מחשבון החזר מס הכנסה</h1>
+  <div class="header-actions">
+    <span id="currentClientBadge" style="font-size:0.85rem;color:var(--accent);font-weight:600;padding:6px 14px;background:var(--accent-light);border-radius:20px"></span>
+    <button class="btn-export" onclick="exportData()">💾 שמור נתונים</button>
+    <button class="btn-export" onclick="importData()" style="background:var(--purple)">📂 טען נתונים</button>
+    <button class="btn-export" onclick="printReport()" style="background:var(--success)">🖨️ הדפסה</button>
+    <div class="theme-toggle" onclick="toggleTheme()">
+      <span class="icon-sun">☀️</span>
+      <span class="icon-moon">🌙</span>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs-container">
+  <div class="tabs" id="mainTabs">
+    <button class="tab active" data-tab="docs">📋 מסמכים נדרשים</button>
+    <button class="tab" data-tab="ref">📑 טבלאות ייחוס</button>
+    <button class="tab year-tab" data-tab="y2020">2020</button>
+    <button class="tab year-tab" data-tab="y2021">2021</button>
+    <button class="tab year-tab" data-tab="y2022">2022</button>
+    <button class="tab year-tab" data-tab="y2023">2023</button>
+    <button class="tab year-tab" data-tab="y2024">2024</button>
+    <button class="tab year-tab" data-tab="y2025">2025</button>
+    <button class="tab" data-tab="summary">📊 סיכום</button>
+    <button class="tab" data-tab="planning">💡 תכנון מס</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main-content">
+  <!-- All tab panels will be injected by JS -->
+  <div id="panelContainer"></div>
+</main>
+
+<footer class="app-credit">
+  <span>&copy; 2024-2025 Daniel Lizenboim. All rights reserved.</span>
+</footer>
+
+</div><!-- end app-main -->
+</div><!-- end app-layout -->
+
+<!-- Modal for add/rename/delete client -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Hidden file input for import -->
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<!-- PDF.js for document extraction -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<!-- Prevent browser from navigating when files are dropped outside upload zone -->
+<script>
+document.addEventListener('dragover', function(e) { e.preventDefault(); });
+document.addEventListener('drop', function(e) { e.preventDefault(); });
+
+// Header scroll effect
+window.addEventListener('scroll', function() {
+  const header = document.querySelector('.app-header');
+  if (header) {
+    header.classList.toggle('scrolled', window.scrollY > 30);
+  }
+}, { passive: true });
+</script>
+
+<script>
+// =============================================
+// INDEXEDDB - File Storage
+// =============================================
+const DB_NAME = 'TaxCalcFiles';
+const DB_VERSION = 1;
+let db = null;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = (e) => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('files')) {
+        d.createObjectStore('files', { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function saveFileToDB(fileObj) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('files', 'readwrite');
+    tx.objectStore('files').put(fileObj);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+function getFilesForYearClient(clientId, year) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('files', 'readonly');
+    const store = tx.objectStore('files');
+    const req = store.getAll();
+    req.onsuccess = () => {
+      const all = req.result || [];
+      resolve(all.filter(f => f.clientId === clientId && f.year === year));
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function deleteFileFromDB(fileId) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('files', 'readwrite');
+    tx.objectStore('files').delete(fileId);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+function deleteClientFiles(clientId) {
+  return new Promise(async (resolve) => {
+    const tx = db.transaction('files', 'readwrite');
+    const store = tx.objectStore('files');
+    const req = store.getAll();
+    req.onsuccess = () => {
+      (req.result || []).filter(f => f.clientId === clientId).forEach(f => store.delete(f.id));
+    };
+    tx.oncomplete = () => resolve();
+  });
+}
+
+// =============================================
+// PDF TEXT EXTRACTION
+// =============================================
+async function extractTextFromPDF(arrayBuffer) {
+  if (!window.pdfjsLib) { throw new Error('PDF.js not loaded'); }
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map(item => item.str).join(' ');
+    fullText += pageText + '\n';
+  }
+  return fullText;
+}
+
+// =============================================
+// FORM PARSERS (106, 867)
+// =============================================
+function parseForm106(text) {
+  const results = [];
+
+  // Form 106 table rows in their EXACT order as they appear in the PDF
+  // Each row has a description that appears in the text, and optionally a field key for extraction
+  const tableRows = [
+    { desc: 'הכנסה חייבת רגילה' },
+    { desc: 'החזר הוצאות' },
+    { desc: 'משכורת חייבת במס', key: 'grossIncome', label: 'משכורת חייבת במס (שדה 158)' },
+    { desc: 'מס הכנסה שנוכה במקור', key: 'taxWithheld', label: 'מס הכנסה שנוכה במקור (שדה 042)' },
+    { desc: 'ניכוי לקופת גמל לקצבה', key: 'pensionDeposit', label: 'ניכוי לקופת גמל לקצבה (שדה 045)' },
+    { desc: 'משכורת לצורך הפקדות לקרן השתלמות' },
+    { desc: 'הפרשת המעסיק לקרן השתלמות' },
+    { desc: 'משכורת לצורך הפקדות לקצבה' },
+    { desc: 'הפרשת מעסיק לקופת גמל לקצבה' },
+    { desc: 'הפרשת מעסיק לפיצויים' },
+    { desc: 'סך הפרשות מעסיק לקצבה', key: 'pensionEmployer', label: 'סך הפרשות מעסיק לקצבה (שדה 248)' },
+    { desc: 'הכנסת עבודה מבוטחת' },
+    { desc: 'דמי חבר / דמי טיפול לקביעת הניכוי' },
+    { desc: 'דמי חבר / דמי טיפול לא הופחת' },
+    { desc: 'יום הבראה' },
+    { desc: 'הפחתת שכר' },
+    { desc: 'שכר חייב בדמי ביטוח' },
+    { desc: 'ביטוח לאומי', key: 'bituachLeumi', label: 'ביטוח לאומי ששולם' },
+    { desc: 'ביטוח בריאות', key: 'healthTax', label: 'מס בריאות ששולם' },
+  ];
+
+  // Step 1: Find descriptions in order (sequential search to avoid substring false matches)
+  const foundDescs = [];
+  let searchFrom = 0;
+  for (const row of tableRows) {
+    const pos = text.indexOf(row.desc, searchFrom);
+    if (pos >= 0) {
+      foundDescs.push({ ...row, pos });
+      searchFrom = pos + row.desc.length;
+    }
+  }
+
+  if (foundDescs.length < 3) return results; // Not enough matches - probably not a 106
+
+  // Step 2: Extract the values block that appears AFTER all descriptions
+  // In Form 106 PDFs, all descriptions appear first, then all values in the same row order
+  const lastDesc = foundDescs[foundDescs.length - 1];
+  const afterDescs = text.substring(lastDesc.pos + lastDesc.desc.length);
+
+  // Get everything before the first Hebrew character (= the values block)
+  const numbersSection = afterDescs.split(/[א-ת]/)[0];
+  const rawNums = numbersSection.match(/\d[\d,]*/g);
+
+  if (!rawNums || rawNums.length === 0) return results;
+
+  const values = rawNums.map(n => parseFloat(n.replace(/,/g, ''))).filter(n => !isNaN(n) && n > 0);
+
+  // Step 3: Match descriptions to values by index
+  // The i-th found description corresponds to the i-th value
+  for (let i = 0; i < foundDescs.length && i < values.length; i++) {
+    if (foundDescs[i].key) {
+      results.push({
+        key: foundDescs[i].key,
+        label: foundDescs[i].label,
+        value: values[i]
+      });
+    }
+  }
+
+  return results;
+}
+
+// Field-number based parser — works with OCR text where each line has field number + value
+function parseForm106ByFieldNumbers(text) {
+  const results = [];
+  const fields = [
+    { nums: ['158'], key: 'grossIncome', label: 'משכורת חייבת במס (שדה 158)' },
+    { nums: ['042','42'], key: 'taxWithheld', label: 'מס הכנסה שנוכה במקור (שדה 042)' },
+    { nums: ['045','45'], key: 'pensionDeposit', label: 'ניכוי לקופת גמל לקצבה (שדה 045)' },
+    { nums: ['248'], key: 'pensionEmployer', label: 'סך הפרשות מעסיק לקצבה (שדה 248)' },
+    { nums: ['209'], key: 'severanceExempt209', label: 'פיצויים פטורים (שדה 209)' },
+  ];
+
+  const lines = text.split('\n');
+  const found = new Set();
+
+  // Search each line and also a 2-line window (OCR sometimes splits a row across lines)
+  const lineGroups = [];
+  for (let i = 0; i < lines.length; i++) {
+    lineGroups.push(lines[i]);
+    if (i + 1 < lines.length) lineGroups.push(lines[i] + ' ' + lines[i+1]);
+  }
+
+  for (const line of lineGroups) {
+    for (const field of fields) {
+      if (found.has(field.key)) continue;
+      // Check if this line contains the field number
+      const hasNum = field.nums.some(num => {
+        // Match field number: standalone, in "158/172" pattern, or with non-digits around
+        const re = new RegExp('(?:^|[^\\d])' + num + '(?:[^\\d]|$)');
+        return re.test(line);
+      });
+      if (!hasNum) continue;
+
+      // Extract all number groups from this line (including comma-separated)
+      const rawNums = line.match(/[\d][\d,.]*[\d]/g);
+      if (!rawNums) continue;
+      const vals = rawNums
+        .map(n => parseFloat(n.replace(/,/g, '')))
+        .filter(n => !isNaN(n) && n >= 10);
+
+      // Exclude field numbers themselves and numbers that are clearly field numbers (< 1000 and match a known section)
+      const fieldNumVals = new Set(field.nums.map(n => parseInt(n)));
+      const filtered = vals.filter(v => {
+        const rounded = Math.round(v);
+        if (fieldNumVals.has(rounded)) return false;
+        // Also exclude other known field numbers
+        if ([158,172,218,219,248,249,244,245,209,042,42,045,45,268,269,272,256,109,180,135,244,216,003,139,182,181].includes(rounded)) return false;
+        return true;
+      });
+      if (filtered.length > 0) {
+        // Take the largest value — typically the main amount
+        const best = Math.max(...filtered);
+        results.push({ key: field.key, label: field.label, value: best });
+        found.add(field.key);
+      }
+    }
+  }
+
+  // Also try searching for ביטוח לאומי / ביטוח בריאות by keyword
+  const kwFields = [
+    { kw: /ביטוח\s*לאומי/i, key: 'bituachLeumi', label: 'ביטוח לאומי ששולם' },
+    { kw: /ביטוח\s*בריאות|מס\s*בריאות/i, key: 'healthTax', label: 'מס בריאות ששולם' },
+  ];
+  for (const line of lines) {
+    for (const field of kwFields) {
+      if (found.has(field.key)) continue;
+      if (!field.kw.test(line)) continue;
+      const rawNums = line.match(/[\d][,\d]*(?:\.\d+)?/g);
+      if (!rawNums) continue;
+      const vals = rawNums
+        .map(n => parseFloat(n.replace(/,/g, '')))
+        .filter(n => !isNaN(n) && n > 100);
+      if (vals.length > 0) {
+        results.push({ key: field.key, label: field.label, value: Math.max(...vals) });
+        found.add(field.key);
+      }
+    }
+  }
+
+  return results;
+}
+
+function parseForm867(text) {
+  const results = [];
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+
+  // Helper: find standalone number on nearby previous lines
+  function findStandaloneNear(idx, window=3) {
+    for (let j = Math.max(0, idx - window); j < idx; j++) {
+      const m = lines[j].match(/^([\d,]+(?:\.\d+)?)$/);
+      if (m) {
+        const val = parseFloat(m[1].replace(/,/g, ''));
+        if (val > 0) return val;
+      }
+    }
+    return 0;
+  }
+
+  // Detect source institution
+  let source = '';
+  const sourceMatch = text.match(/שם\s*(?:ה)?(?:מנכה|חייב)\s*[:\s]*([^\d\n]{3,40})/);
+  if (sourceMatch) source = sourceMatch[1].trim();
+  // IBI-style: "שם" on one line, then company name on next
+  if (!source) {
+    for (let i = 0; i < Math.min(lines.length, 15); i++) {
+      if (/^א\.\s*פרטי\s*המנכה$|^פרטי\s*המנכה$/.test(lines[i]) || (lines[i] === 'שם' && i+2 < lines.length && /ניכויים/.test(lines[i+1]))) {
+        for (let j = i+1; j <= Math.min(i+3, lines.length-1); j++) {
+          const m = lines[j].match(/^([^\d]{3,35})\d{9}/);
+          if (m) { source = m[1].trim(); break; }
+        }
+        break;
+      }
+    }
+  }
+  if (source) results.push({ key: '_source', label: 'מוסד', value: source, display: true });
+
+  // ===== 867א+ב: Capital Gains =====
+  const has867ab = /867\s*[אa]|רווח\s*הון.*נתוני\s*הכנסות|רווחים\s*חייבים\s*במס.*הפסדים/i.test(text);
+  if (has867ab) {
+    let totalCapGain = 0;
+    const gainsByRate = {};
+
+    // Bank style: "25   %" then next line has amount
+    for (let i = 0; i < lines.length; i++) {
+      const rateMatch = lines[i].match(/^\s*([\d]+)\s*%\s*$/);
+      if (rateMatch && i+1 < lines.length) {
+        const rate = parseInt(rateMatch[1]);
+        const valMatch = lines[i+1].match(/([\d,]+\.\d+)/);
+        if (valMatch) {
+          const val = parseFloat(valMatch[1].replace(/,/g, ''));
+          if (val > 0 && [0,15,20,25,30,35].includes(rate)) {
+            gainsByRate[rate] = (gainsByRate[rate] || 0) + val;
+          }
+        }
+      }
+    }
+
+    // IBI style: standalone number before "רווחים חייבים במס"
+    for (let i = 0; i < lines.length; i++) {
+      if (/רווחים\s*חייבים\s*במס\s*(למעט|לא)/.test(lines[i])) {
+        const sv = findStandaloneNear(i, 4);
+        if (sv > 0 && !gainsByRate[25]) gainsByRate[25] = sv;
+        break;
+      }
+    }
+
+    if (Object.keys(gainsByRate).length > 0) {
+      totalCapGain = Object.values(gainsByRate).reduce((a,b) => a+b, 0);
+    }
+    if (totalCapGain > 0) {
+      results.push({ key: 'capGainTraded', label: 'רווחי הון מני"ע סחירים', value: Math.round(totalCapGain * 100) / 100 });
+    }
+
+    // Losses — strip footnote refs like (3) before extracting
+    for (let i = 0; i < lines.length; i++) {
+      if (/הפסדים.*ברי\s*קיזוז/.test(lines[i]) && !/שאינם/.test(lines[i])) {
+        const clean = lines[i].replace(/\(\d+\)/g, '');
+        const nums = clean.match(/([\d,]+(?:\.\d+)?)/g);
+        let found = false;
+        if (nums) {
+          for (const n of nums) {
+            const val = parseFloat(n.replace(/,/g, ''));
+            if (val > 0 && val < 100000000) {
+              results.push({ key: 'capitalLossOffset', label: 'הפסדי הון ברי קיזוז', value: val });
+              found = true; break;
+            }
+          }
+        }
+        if (!found) {
+          const sv = findStandaloneNear(i, 3);
+          if (sv > 0) results.push({ key: 'capitalLossOffset', label: 'הפסדי הון ברי קיזוז', value: sv });
+        }
+        break;
+      }
+    }
+
+    // Tax withheld on capital gains
+    for (let i = 0; i < lines.length; i++) {
+      if (/מס\s*שנוכה\s*במקור/.test(lines[i]) && !/דיבידנד|ריבית|ניכיון/.test(lines[i])) {
+        const clean = lines[i].replace(/\(\d+\)/g, '');
+        const nums = clean.match(/([\d,]+(?:\.\d+)?)/g);
+        let found = false;
+        if (nums) {
+          for (const n of nums) {
+            const val = parseFloat(n.replace(/,/g, ''));
+            if (val > 0.001 && val < 100000000) {
+              results.push({ key: 'capGainTradedTax', label: 'מס שנוכה על רווח הון', value: val });
+              found = true; break;
+            }
+          }
+        }
+        if (!found) {
+          const sv = findStandaloneNear(i, 3);
+          if (sv > 0) results.push({ key: 'capGainTradedTax', label: 'מס שנוכה על רווח הון', value: sv });
+        }
+        break;
+      }
+    }
+  }
+
+  // ===== 867ג: Dividends & Interest from Securities =====
+  const has867g = /867\s*[גg]|דיבידנד.*חלוקת\s*רווחים|דיבידנד.*ריבית\s*מניירות/.test(text);
+  if (has867g) {
+    // Check for "no dividends" message
+    const noDividends = /לא\s*היו\s*בחשבון.*דיבידנד|לא\s*היו.*תשלומי\s*דיבידנד/.test(text);
+
+    if (!noDividends) {
+      // Dividend income — standalone number before "הכנסה מדיבידנד לפני קיזוז"
+      for (let i = 0; i < lines.length; i++) {
+        if (/הכנסה\s*מדיבידנד\s*לפני\s*קיזוז/.test(lines[i])) {
+          const sv = findStandaloneNear(i, 3);
+          if (sv > 0) {
+            results.push({ key: 'dividend', label: 'הכנסה מדיבידנד', value: sv });
+          } else {
+            // Try inline (skip footnote numbers <=9)
+            const clean = lines[i].replace(/\(\d+\)/g, '');
+            const nums = clean.match(/([\d,]+(?:\.\d+)?)/g);
+            if (nums) {
+              for (const n of nums) {
+                const val = parseFloat(n.replace(/,/g, ''));
+                if (val >= 10) { results.push({ key: 'dividend', label: 'הכנסה מדיבידנד', value: val }); break; }
+              }
+            }
+          }
+          break;
+        }
+      }
+
+      // Foreign tax on dividends — first "מס ששולם בחו"ל"
+      for (let i = 0; i < lines.length; i++) {
+        if (/מס\s*ששולם\s*בחו"ל/.test(lines[i])) {
+          const clean = lines[i].replace(/\(\d+\)/g, '');
+          const nums = clean.match(/([\d,]+(?:\.\d+)?)/g);
+          if (nums) {
+            for (const n of nums) {
+              const val = parseFloat(n.replace(/,/g, ''));
+              if (val > 0 && val < 100000000) {
+                results.push({ key: 'dividendForeign', label: 'מס ששולם בחו"ל על דיבידנד', value: val });
+                break;
+              }
+            }
+          }
+          if (!results.find(r => r.key === 'dividendForeign')) {
+            const sv = findStandaloneNear(i, 3);
+            if (sv > 0) results.push({ key: 'dividendForeign', label: 'מס ששולם בחו"ל על דיבידנד', value: sv });
+          }
+          break;
+        }
+      }
+
+      // Tax withheld on dividends
+      for (let i = 0; i < lines.length; i++) {
+        if (/מס\s*שנוכה\s*במקור\s*מדיבידנד/.test(lines[i])) {
+          const clean = lines[i].replace(/\(\d+\)/g, '');
+          const nums = clean.match(/([\d,]+(?:\.\d+)?)/g);
+          if (nums) {
+            for (const n of nums) {
+              const val = parseFloat(n.replace(/,/g, ''));
+              if (val > 0) { results.push({ key: 'dividendTax', label: 'מס שנוכה על דיבידנד', value: val }); break; }
+            }
+          }
+          break;
+        }
+      }
+
+      // Interest from securities
+      for (let i = 0; i < lines.length; i++) {
+        if (/הכנסה\s*מריבית.*דמי\s*ניכיון\s*לפני/.test(lines[i])) {
+          const sv = findStandaloneNear(i, 3);
+          if (sv > 0) results.push({ key: 'interestBonds', label: 'ריבית/דמי ניכיון מני"ע', value: sv });
+          break;
+        }
+      }
+
+      // Tax on interest from securities
+      for (let i = 0; i < lines.length; i++) {
+        if (/מס\s*שנוכה\s*במקור\s*מריבית/.test(lines[i])) {
+          const clean = lines[i].replace(/\(\d+\)/g, '');
+          const nums = clean.match(/([\d,]+(?:\.\d+)?)/g);
+          if (nums) {
+            for (const n of nums) {
+              const val = parseFloat(n.replace(/,/g, ''));
+              if (val > 0) { results.push({ key: 'interestBondsTax', label: 'מס שנוכה על ריבית מני"ע', value: val }); break; }
+            }
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  // ===== 867ד: Interest from Deposits =====
+  const has867d = /867\s*[דd]|ריבית.*רווחים.*מפיקדונות|מריבית.*ורווחים\s*אחרים|אישור\s*ניכוי\s*מס.*מריבית/.test(text);
+  if (has867d) {
+    let totalInterest = 0;
+    let totalInterestTax = 0;
+    let exemptInterest = 0;
+
+    // Strategy 1: Tabular format (Bank Hapoalim etc.)
+    // Fields 78/126/142/53 on one line, values on the next line labeled "הכנסה חייבת"
+    for (let i = 0; i < lines.length; i++) {
+      if (/הכנסה\s*חייבת/.test(lines[i]) && !(/שכר|עבודה|מס\s*הכנסה/.test(lines[i]))) {
+        const nums = lines[i].match(/([\d,]+(?:\.\d+)?)/g);
+        if (nums) {
+          for (const n of nums) {
+            const val = parseFloat(n.replace(/,/g, ''));
+            if (val > 0) totalInterest += val;
+          }
+        }
+        break;
+      }
+    }
+
+    // Strategy 2: Inline format — "הכנסה חייבת מריבית ... AMOUNT שדה"
+    if (totalInterest === 0) {
+      for (let i = 0; i < lines.length; i++) {
+        const m = lines[i].match(/הכנסה\s*חייבת.*?([\d,]+(?:\.\d+)?)\s+.*?שדה/);
+        if (m) {
+          const val = parseFloat(m[1].replace(/,/g, ''));
+          if (val > 0) totalInterest += val;
+        }
+      }
+    }
+
+    // Exempt interest — שדה 209
+    for (let i = 0; i < lines.length; i++) {
+      if (/שדה\s*\*?209|209\s*\*?\)\s*שדה/.test(lines[i])) {
+        const nums = lines[i].match(/([\d,]+(?:\.\d+)?)/g);
+        if (nums) {
+          for (const n of nums) {
+            const val = parseFloat(n.replace(/,/g, ''));
+            if (val > 0 && n !== '209') { exemptInterest = val; break; }
+          }
+        }
+        break;
+      }
+    }
+
+    // Tax withheld — שדה 043
+    for (let i = 0; i < lines.length; i++) {
+      if (/שדה\s*\*?043|043\s*\*?\)\s*שדה/.test(lines[i])) {
+        const nums = lines[i].match(/([\d,]+(?:\.\d+)?)/g);
+        if (nums) {
+          for (const n of nums) {
+            const val = parseFloat(n.replace(/,/g, ''));
+            if (val > 0 && !/043/.test(n)) { totalInterestTax = val; break; }
+          }
+        }
+        break;
+      }
+    }
+
+    if (totalInterest > 0) results.push({ key: 'interestDeposits', label: 'ריבית מפקדונות / תוכניות חסכון', value: Math.round(totalInterest) });
+    if (totalInterestTax > 0) results.push({ key: 'interestDepositsTax', label: 'מס שנוכה על ריבית פקדונות', value: Math.round(totalInterestTax) });
+    if (exemptInterest > 0) results.push({ key: 'interestExempt', label: 'ריבית פטורה ממס', value: Math.round(exemptInterest) });
+  }
+
+  return results;
+}
+
+function detectFormType(text) {
+  const lower = text.toLowerCase();
+  if (/טופס\s*106|form\s*106|אישור\s*שנתי\s*על\s*הכנסות|106/.test(text)) return '106';
+  if (/טופס\s*867|form\s*867|ריכוז\s*שנתי|דוח\s*שנתי\s*לני"ע|867/.test(text)) return '867';
+  if (/טופס\s*161|form\s*161|מענק\s*פרישה|פיצוי|161/.test(text)) return '161';
+  return 'unknown';
+}
+
+function parseDocument(text) {
+  const type = detectFormType(text);
+  let results = [];
+  let formName = 'מסמך לא מזוהה';
+  const rawText = text;
+
+  if (type === '106') {
+    // Try description-based parser first
+    results = parseForm106(text);
+    // Also try field-number parser and merge additional fields
+    const fnResults = parseForm106ByFieldNumbers(text);
+    if (fnResults.length > results.length) {
+      results = fnResults;
+    } else {
+      const existingKeys = new Set(results.map(r => r.key));
+      fnResults.forEach(r => {
+        if (!existingKeys.has(r.key)) results.push(r);
+      });
+    }
+    formName = 'טופס 106';
+  } else if (type === '867') {
+    results = parseForm867(text);
+    formName = 'טופס 867';
+  } else {
+    // Try all parsers
+    results = [...parseForm106(text), ...parseForm106ByFieldNumbers(text), ...parseForm867(text)];
+    const seen = new Set();
+    results = results.filter(r => { if (seen.has(r.key)) return false; seen.add(r.key); return true; });
+    if (results.length > 0) formName = 'מסמך (זוהה חלקית)';
+  }
+
+  return { type, formName, results, rawText };
+}
+
+// =============================================
+// UPLOAD HANDLING PER YEAR
+// =============================================
+async function handleFileUpload(files, year) {
+  if (!files || files.length === 0) { showToast('לא נבחרו קבצים'); return; }
+  showToast('מעבד ' + files.length + ' קבצים...');
+  for (const file of files) {
+    try {
+    const fileId = 'f_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2,4);
+    const fileObj = {
+      id: fileId,
+      clientId: currentClientId,
+      year: year,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      uploadedAt: Date.now(),
+      status: 'pending',
+      extractedData: null,
+      data: null // store file data for PDFs
+    };
+
+    if (file.type === 'application/pdf') {
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        fileObj.data = arrayBuffer.slice(0);
+
+        // Try text extraction
+        let text = '';
+        try { text = await extractTextFromPDF(arrayBuffer); } catch(e) { text = ''; }
+
+        // If text is too short, PDF is image-based (scanned)
+        if (text.replace(/\s/g, '').length < 50) {
+          fileObj.status = 'stored';
+          fileObj.formType = 'PDF סרוק (הזנה ידנית)';
+          await saveFileToDB(fileObj);
+          renderCurrentTab();
+          showToast('⚠️ ' + file.name + ' — קובץ סרוק, יש להזין נתונים ידנית');
+        } else {
+          const parsed = parseDocument(text);
+          fileObj.formType = parsed.formName;
+          fileObj.extractedText = text.substring(0, 2000);
+
+          if (parsed.results.length > 0) {
+            fileObj.status = 'extracted';
+            fileObj.extractedData = parsed.results;
+            await saveFileToDB(fileObj);
+            renderCurrentTab();
+            showExtractPreview(year, fileId, parsed);
+          } else {
+            fileObj.status = 'no_data';
+            await saveFileToDB(fileObj);
+            renderCurrentTab();
+            showToast('לא נמצאו נתונים לחילוץ מ-' + file.name);
+          }
+        }
+      } catch(err) {
+        fileObj.status = 'error';
+        fileObj.errorMsg = err.message;
+        await saveFileToDB(fileObj);
+        renderCurrentTab();
+        showToast('שגיאה בקריאת ' + file.name);
+      }
+    } else if (file.type.startsWith('image/')) {
+      // Image file — save as reference, manual entry needed
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        fileObj.data = e.target.result;
+        fileObj.status = 'stored';
+        fileObj.formType = 'תמונה (הזנה ידנית)';
+        await saveFileToDB(fileObj);
+        renderCurrentTab();
+      };
+      reader.readAsDataURL(file);
+      showToast('📎 ' + file.name + ' — נשמר, יש להזין נתונים ידנית');
+    } else {
+      // Other file types - just save
+      fileObj.status = 'stored';
+      fileObj.formType = 'קובץ מצורף';
+      await saveFileToDB(fileObj);
+      renderCurrentTab();
+      showToast(file.name + ' — נשמר');
+    }
+    } catch(outerErr) {
+      console.error('Upload error:', outerErr);
+      showToast('שגיאה בהעלאת ' + file.name + ': ' + outerErr.message);
+    }
+  }
+}
+
+function showExtractPreview(year, fileId, parsed) {
+  // Filter out display-only items (like _source)
+  const dataResults = parsed.results.filter(r => !r.key.startsWith('_'));
+  const sourceItem = parsed.results.find(r => r.key === '_source');
+
+  let html = `<h3>📄 נמצאו נתונים! (${parsed.formName}${sourceItem ? ' — ' + sourceItem.value : ''})</h3>
+    <p>בחר אילו שדות להזין אוטומטית:</p>
+    <div style="max-height:350px;overflow-y:auto">`;
+
+  dataResults.forEach((r, i) => {
+    const existing = state[year][r.key] || 0;
+    const hasExisting = existing > 0 && existing !== r.value;
+    const existingFormula = state[year]['_formula_' + r.key] || '';
+
+    html += `<div class="extract-row" style="align-items:flex-start">
+      <input type="checkbox" checked data-idx="${i}" style="margin-top:4px">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <label>${r.label}</label>
+          <span class="extract-value">${typeof r.value === 'number' ? Math.round(r.value).toLocaleString('he-IL') + ' ₪' : r.value}</span>
+        </div>`;
+
+    if (hasExisting) {
+      const newFormula = existingFormula
+        ? existingFormula + '+' + r.value
+        : existing + '+' + r.value;
+      const newTotal = existing + r.value;
+      html += `<div style="margin-top:4px;padding:6px 8px;background:rgba(168,85,247,0.08);border-radius:6px;font-size:0.8rem;color:var(--text-secondary)">
+        <div>⚠️ כבר קיים ערך: <b>${Math.round(existing).toLocaleString('he-IL')} ₪</b>${existingFormula ? ' (נוסחה: ' + existingFormula + ')' : ''}</div>
+        <div style="margin-top:4px;display:flex;gap:8px">
+          <label style="cursor:pointer"><input type="radio" name="merge_${i}" value="add" checked> חבר (${newFormula} = <b>${Math.round(newTotal).toLocaleString('he-IL')}</b>)</label>
+          <label style="cursor:pointer"><input type="radio" name="merge_${i}" value="replace"> החלף</label>
+          <label style="cursor:pointer"><input type="radio" name="merge_${i}" value="skip"> דלג</label>
+        </div>
+      </div>`;
+    }
+
+    html += `</div></div>`;
+  });
+
+  html += `</div>
+    <div class="modal-buttons" style="margin-top:16px">
+      <button class="btn-primary" onclick="applyExtraction(${year}, '${fileId}')">הזן נתונים</button>
+      <button class="btn-cancel" onclick="hideModal()">ביטול</button>
+      <button class="btn-cancel" onclick="toggleRawText()" style="font-size:0.75rem">הצג טקסט גולמי</button>
+    </div>
+    <div id="rawTextContainer" style="display:none;margin-top:12px">
+      <textarea style="width:100%;height:200px;font-size:0.75rem;direction:rtl;background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border);border-radius:4px;padding:8px" readonly>${(parsed.rawText||'').replace(/</g,'&lt;')}</textarea>
+      <button class="btn-cancel" style="margin-top:4px;font-size:0.7rem" onclick="navigator.clipboard.writeText(document.querySelector('#rawTextContainer textarea').value);showToast('הועתק!')">העתק טקסט</button>
+    </div>`;
+
+  showModal(html);
+  window._pendingExtraction = dataResults;
+}
+
+function toggleRawText() {
+  const c = document.getElementById('rawTextContainer');
+  if (c) c.style.display = c.style.display === 'none' ? 'block' : 'none';
+}
+
+function applyExtraction(year, fileId) {
+  const checkboxes = document.querySelectorAll('#modalContent input[type="checkbox"]');
+  const data = window._pendingExtraction || [];
+  let count = 0;
+  checkboxes.forEach((cb, i) => {
+    if (!cb.checked || !data[i]) return;
+    const key = data[i].key;
+    const newVal = data[i].value;
+    const existing = state[year][key] || 0;
+    const existingFormula = state[year]['_formula_' + key] || '';
+    const hasExisting = existing > 0 && existing !== newVal;
+
+    // Check merge mode radio buttons
+    let mode = 'replace'; // default for new fields
+    if (hasExisting) {
+      const radio = document.querySelector(`input[name="merge_${i}"]:checked`);
+      mode = radio ? radio.value : 'add';
+    }
+
+    if (mode === 'skip') return;
+
+    if (mode === 'add' && hasExisting) {
+      // Build formula: append new value
+      const formula = existingFormula
+        ? existingFormula + '+' + newVal
+        : existing + '+' + newVal;
+      state[year][key] = existing + newVal;
+      state[year]['_formula_' + key] = formula;
+    } else {
+      // Replace
+      state[year][key] = newVal;
+      delete state[year]['_formula_' + key];
+    }
+    count++;
+  });
+  autoSave();
+  hideModal();
+  renderCurrentTab();
+  showToast(`${count} שדות הוזנו בהצלחה`);
+  delete window._pendingExtraction;
+}
+
+async function removeUploadedFile(fileId, year) {
+  await deleteFileFromDB(fileId);
+  renderCurrentTab();
+  showToast('קובץ הוסר');
+}
+
+async function buildUploadSection(year) {
+  let files = [];
+  try { files = await getFilesForYearClient(currentClientId, year); } catch(e) {}
+
+  let html = `<div class="section-card" id="upload_${year}">
+    <div class="section-title">📎 מסמכים — ${year}</div>
+    <div class="upload-zone" id="uploadZone_${year}"
+      ondragover="event.preventDefault(); event.stopPropagation(); this.classList.add('dragover')"
+      ondragleave="this.classList.remove('dragover')"
+      ondrop="event.preventDefault(); event.stopPropagation(); this.classList.remove('dragover'); handleFileUpload(event.dataTransfer.files, ${year}).catch(e => { console.error(e); showToast('שגיאה: ' + e.message); })"
+      onclick="document.getElementById('yearFileInput_${year}').click()">
+      <div class="upload-icon">📂</div>
+      <div class="upload-text">גרור לכאן מסמכים או לחץ לבחירה</div>
+      <div class="upload-hint">PDF (טופס 106, 867, 161) | תמונות (JPG, PNG)</div>
+    </div>
+    <input type="file" id="yearFileInput_${year}" accept=".pdf,.jpg,.jpeg,.png,.gif" multiple style="display:none"
+      onchange="handleFileUpload(this.files, ${year}); this.value=''">`;
+
+  if (files.length > 0) {
+    html += `<div class="uploaded-files">`;
+    files.forEach(f => {
+      const icon = f.type === 'application/pdf' ? '📄' : '🖼️';
+      const sizeKB = Math.round(f.size / 1024);
+      const date = new Date(f.uploadedAt).toLocaleDateString('he-IL');
+      const statusClass = f.status === 'extracted' ? 'extracted' : (f.status === 'error' ? 'error' : 'pending');
+      const statusText = f.status === 'extracted' ? 'חולץ' : (f.status === 'error' ? 'שגיאה' : (f.status === 'no_data' ? 'ללא נתונים' : 'נשמר'));
+      html += `<div class="uploaded-file">
+        <span class="file-icon">${icon}</span>
+        <div class="file-info">
+          <div class="file-name">${f.name}</div>
+          <div class="file-meta">${f.formType || ''} · ${sizeKB}KB · ${date}</div>
+        </div>
+        <span class="file-status ${statusClass}">${statusText}</span>
+        <div class="file-actions">
+          ${f.extractedData ? `<button class="file-action-btn" onclick="reShowExtraction(${year}, '${f.id}')" title="הצג נתונים">📊</button>` : ''}
+          <button class="file-action-btn delete" onclick="removeUploadedFile('${f.id}', ${year})" title="הסר">🗑️</button>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+async function reShowExtraction(year, fileId) {
+  const files = await getFilesForYearClient(currentClientId, year);
+  const file = files.find(f => f.id === fileId);
+  if (file && file.extractedData) {
+    showExtractPreview(year, fileId, { formName: file.formType || 'מסמך', results: file.extractedData });
+  }
+}
+
+// =============================================
+// PER-YEAR CUSTOM DOCUMENT CHECKLIST
+// =============================================
+function getYearDocs(year) {
+  const key = 'taxCalc_yearDocs_' + currentClientId + '_' + year;
+  const saved = localStorage.getItem(key);
+  if (saved) {
+    try { return JSON.parse(saved); } catch(e) {}
+  }
+  // Default checklist
+  return [
+    { id: 'd1', name: 'טופס 106', detail: 'אישור שנתי מכל מעסיק', checked: false },
+    { id: 'd2', name: 'טופס 867', detail: 'ריכוז הכנסות הון מבנקים/ברוקרים', checked: false },
+    { id: 'd3', name: 'תלוש שכר דצמבר', detail: 'לאימות סה"כ שנתי', checked: false },
+    { id: 'd4', name: 'אישור פנסיה', detail: 'הפקדות עובד שנתיות', checked: false },
+    { id: 'd5', name: 'קבלות תרומות', detail: 'שדה 046 — מינ\' 190 ₪', checked: false },
+    { id: 'd6', name: 'אישור ביטוח חיים', detail: 'פרמיה שנתית', checked: false },
+  ];
+}
+
+function saveYearDocs(year, docs) {
+  const key = 'taxCalc_yearDocs_' + currentClientId + '_' + year;
+  localStorage.setItem(key, JSON.stringify(docs));
+}
+
+function toggleYearDoc(year, docId) {
+  const docs = getYearDocs(year);
+  const doc = docs.find(d => d.id === docId);
+  if (doc) {
+    doc.checked = !doc.checked;
+    saveYearDocs(year, docs);
+    renderCurrentTab();
+  }
+}
+
+function addYearDoc(year) {
+  const input = document.getElementById('addDocInput_' + year);
+  if (!input || !input.value.trim()) return;
+  const docs = getYearDocs(year);
+  docs.push({ id: 'd_' + Date.now(), name: input.value.trim(), detail: '', checked: false });
+  saveYearDocs(year, docs);
+  renderCurrentTab();
+}
+
+function removeYearDoc(year, docId) {
+  let docs = getYearDocs(year);
+  docs = docs.filter(d => d.id !== docId);
+  saveYearDocs(year, docs);
+  renderCurrentTab();
+}
+
+function buildYearChecklist(year) {
+  const docs = getYearDocs(year);
+  const checked = docs.filter(d => d.checked).length;
+  const total = docs.length;
+
+  let html = `<div class="section-card" id="checklist_${year}">
+    <div class="section-title">✅ צ'קליסט מסמכים — ${year}
+      <span style="margin-right:auto;font-size:0.8rem;color:var(--text-muted);font-weight:400">${checked}/${total}</span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" style="width:${total > 0 ? checked/total*100 : 0}%"></div>
+    </div>`;
+
+  docs.forEach(d => {
+    html += `<div class="checklist-item ${d.checked ? 'checked' : ''}" style="align-items:center">
+      <input type="checkbox" ${d.checked ? 'checked' : ''} onchange="toggleYearDoc(${year}, '${d.id}')">
+      <div class="checklist-info" style="flex:1">
+        <div class="doc-name">${d.name}</div>
+        ${d.detail ? `<div class="doc-detail">${d.detail}</div>` : ''}
+      </div>
+      <button class="file-action-btn delete" onclick="removeYearDoc(${year}, '${d.id}')" title="הסר" style="font-size:0.8rem">✕</button>
+    </div>`;
+  });
+
+  html += `<div class="add-doc-row">
+    <input type="text" id="addDocInput_${year}" placeholder="הוסף מסמך..." onkeydown="if(event.key==='Enter')addYearDoc(${year})">
+    <button class="add-doc-btn" onclick="addYearDoc(${year})">+ הוסף</button>
+  </div>
+  </div>`;
+  return html;
+}
+</script>
+
+<script>
+// =============================================
+// TAX REFERENCE DATA
+// =============================================
+const TAX_DATA = {
+  brackets: {
+    2020: [{r:0.10,up:75960},{r:0.14,up:108960},{r:0.20,up:174960},{r:0.31,up:243120},{r:0.35,up:505920},{r:0.47,up:651600},{r:0.50,up:Infinity}],
+    2021: [{r:0.10,up:75480},{r:0.14,up:108360},{r:0.20,up:173880},{r:0.31,up:241680},{r:0.35,up:502920},{r:0.47,up:647640},{r:0.50,up:Infinity}],
+    2022: [{r:0.10,up:77400},{r:0.14,up:110880},{r:0.20,up:178080},{r:0.31,up:247440},{r:0.35,up:514920},{r:0.47,up:663240},{r:0.50,up:Infinity}],
+    2023: [{r:0.10,up:81480},{r:0.14,up:116760},{r:0.20,up:187440},{r:0.31,up:260520},{r:0.35,up:542160},{r:0.47,up:698280},{r:0.50,up:Infinity}],
+    2024: [{r:0.10,up:84120},{r:0.14,up:120720},{r:0.20,up:193800},{r:0.31,up:269280},{r:0.35,up:560280},{r:0.47,up:721560},{r:0.50,up:Infinity}],
+    2025: [{r:0.10,up:84120},{r:0.14,up:120720},{r:0.20,up:193800},{r:0.31,up:269280},{r:0.35,up:560280},{r:0.47,up:721560},{r:0.50,up:Infinity}]
+  },
+  creditPointValue: {2020:2628,2021:2616,2022:2676,2023:2820,2024:2904,2025:2904},
+  surtaxThreshold: {2020:651600,2021:647640,2022:663240,2023:698280,2024:721560,2025:721560},
+  severanceExemptPerYear: {2020:12420,2021:12340,2022:12640,2023:13310,2024:13750,2025:13750},
+  rentalExemptMonthly: {2020:5100,2021:5070,2022:5196,2023:5471,2024:5654,2025:5654},
+  lifeInsuranceCap: 6276,
+  // Section 125ג — interest exemption for low-income individuals
+  interestExemptCap: {2020:9600, 2021:9600, 2022:9840, 2023:10440, 2024:10920, 2025:10920},
+  interestExemptThreshold: {2020:62400, 2021:62400, 2022:64200, 2023:67560, 2024:69840, 2025:69840}
+};
+
+// =============================================
+// CLIENT MANAGEMENT
+// =============================================
+let clients = []; // [{id, name, createdAt}]
+let currentClientId = null;
+
+function loadClients() {
+  const saved = localStorage.getItem('taxCalc_clients');
+  if (saved) {
+    try { clients = JSON.parse(saved); } catch(e) { clients = []; }
+  }
+  // Migrate: if old single-client data exists, create a default client
+  if (clients.length === 0) {
+    const oldState = localStorage.getItem('taxCalcState');
+    const defaultClient = { id: generateId(), name: 'לקוח ראשון', createdAt: Date.now() };
+    clients.push(defaultClient);
+    saveClients();
+    if (oldState) {
+      localStorage.setItem('taxCalc_data_' + defaultClient.id, oldState);
+      localStorage.removeItem('taxCalcState');
+    }
+    // Migrate docs too
+    const oldDocs = localStorage.getItem('taxCalcDocs');
+    if (oldDocs) {
+      localStorage.setItem('taxCalc_docs_' + defaultClient.id, oldDocs);
+      localStorage.removeItem('taxCalcDocs');
+    }
+  }
+  // Load last active client
+  const lastActive = localStorage.getItem('taxCalc_activeClient');
+  if (lastActive && clients.find(c => c.id === lastActive)) {
+    currentClientId = lastActive;
+  } else {
+    currentClientId = clients[0].id;
+  }
+}
+
+function saveClients() {
+  localStorage.setItem('taxCalc_clients', JSON.stringify(clients));
+}
+
+function generateId() {
+  return 'c_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 5);
+}
+
+function getCurrentClient() {
+  return clients.find(c => c.id === currentClientId);
+}
+
+function switchClient(clientId) {
+  // Save current state before switching
+  autoSave();
+  currentClientId = clientId;
+  localStorage.setItem('taxCalc_activeClient', clientId);
+  initState();
+  renderAllPanels();
+  renderClientList();
+  updateClientBadge();
+  showToast('עבר ל: ' + getCurrentClient().name);
+}
+
+function addClient(name) {
+  const newClient = { id: generateId(), name: name.trim(), createdAt: Date.now() };
+  clients.push(newClient);
+  saveClients();
+  switchClient(newClient.id);
+}
+
+function renameClient(clientId, newName) {
+  const client = clients.find(c => c.id === clientId);
+  if (client) {
+    client.name = newName.trim();
+    saveClients();
+    renderClientList();
+    updateClientBadge();
+    showToast('שם שונה ל: ' + newName.trim());
+  }
+}
+
+function deleteClient(clientId) {
+  if (clients.length <= 1) {
+    showToast('לא ניתן למחוק את הלקוח האחרון');
+    return;
+  }
+  const client = clients.find(c => c.id === clientId);
+  clients = clients.filter(c => c.id !== clientId);
+  // Remove client data from localStorage
+  localStorage.removeItem('taxCalc_data_' + clientId);
+  localStorage.removeItem('taxCalc_docs_' + clientId);
+  // Remove per-year checklists
+  [2020,2021,2022,2023,2024,2025].forEach(y => localStorage.removeItem('taxCalc_yearDocs_' + clientId + '_' + y));
+  // Remove uploaded files from IndexedDB
+  deleteClientFiles(clientId);
+  saveClients();
+  // If deleted the active client, switch to first
+  if (currentClientId === clientId) {
+    switchClient(clients[0].id);
+  } else {
+    renderClientList();
+  }
+  showToast('הלקוח "' + client.name + '" נמחק');
+}
+
+function renderClientList() {
+  const list = document.getElementById('clientList');
+  const footer = document.getElementById('sidebarFooter');
+  let html = '';
+  clients.forEach(c => {
+    const isActive = c.id === currentClientId;
+    const initials = c.name.charAt(0);
+    const date = new Date(c.createdAt).toLocaleDateString('he-IL');
+    html += `<div class="client-item ${isActive ? 'active' : ''}" onclick="switchClient('${c.id}')">
+      <div class="client-avatar">${initials}</div>
+      <div class="client-info">
+        <div class="client-name">${c.name}</div>
+        <div class="client-meta">נוצר ${date}</div>
+      </div>
+      <div class="client-actions" onclick="event.stopPropagation()">
+        <button class="client-action-btn" onclick="showRenameModal('${c.id}')" title="שנה שם">✏️</button>
+        <button class="client-action-btn delete" onclick="showDeleteModal('${c.id}')" title="מחק">🗑️</button>
+      </div>
+    </div>`;
+  });
+  list.innerHTML = html;
+  footer.textContent = `${clients.length} לקוחות`;
+}
+
+function updateClientBadge() {
+  const badge = document.getElementById('currentClientBadge');
+  const client = getCurrentClient();
+  if (badge && client) {
+    badge.textContent = '👤 ' + client.name;
+  }
+}
+
+// Sidebar toggle
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const main = document.getElementById('appMain');
+  const openBtn = document.getElementById('sidebarOpenBtn');
+  sidebar.classList.toggle('collapsed');
+  main.classList.toggle('expanded');
+  openBtn.classList.toggle('visible');
+}
+
+// Modal functions
+function showModal(html) {
+  const overlay = document.getElementById('modalOverlay');
+  const content = document.getElementById('modalContent');
+  content.innerHTML = html;
+  overlay.classList.add('show');
+  // Focus input if exists
+  setTimeout(() => {
+    const input = content.querySelector('input[type="text"]');
+    if (input) input.focus();
+  }, 100);
+}
+
+function hideModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+// Close modal on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.id === 'modalOverlay') hideModal();
+});
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') hideModal();
+});
+
+function showAddClientModal() {
+  showModal(`
+    <h3>➕ לקוח חדש</h3>
+    <input type="text" id="newClientName" placeholder="שם הלקוח..." onkeydown="if(event.key==='Enter')confirmAddClient()">
+    <div class="modal-buttons">
+      <button class="btn-primary" onclick="confirmAddClient()">הוסף</button>
+      <button class="btn-cancel" onclick="hideModal()">ביטול</button>
+    </div>
+  `);
+}
+
+function confirmAddClient() {
+  const name = document.getElementById('newClientName').value.trim();
+  if (!name) { showToast('יש להזין שם'); return; }
+  hideModal();
+  addClient(name);
+}
+
+function showRenameModal(clientId) {
+  const client = clients.find(c => c.id === clientId);
+  if (!client) return;
+  showModal(`
+    <h3>✏️ שינוי שם</h3>
+    <input type="text" id="renameClientInput" value="${client.name}" onkeydown="if(event.key==='Enter')confirmRename('${clientId}')">
+    <div class="modal-buttons">
+      <button class="btn-primary" onclick="confirmRename('${clientId}')">שמור</button>
+      <button class="btn-cancel" onclick="hideModal()">ביטול</button>
+    </div>
+  `);
+}
+
+function confirmRename(clientId) {
+  const name = document.getElementById('renameClientInput').value.trim();
+  if (!name) { showToast('יש להזין שם'); return; }
+  hideModal();
+  renameClient(clientId, name);
+}
+
+function showDeleteModal(clientId) {
+  const client = clients.find(c => c.id === clientId);
+  if (!client) return;
+  if (clients.length <= 1) { showToast('לא ניתן למחוק את הלקוח האחרון'); return; }
+  showModal(`
+    <h3>🗑️ מחיקת לקוח</h3>
+    <p>האם למחוק את <strong>"${client.name}"</strong>?<br>כל הנתונים של לקוח זה יימחקו לצמיתות.</p>
+    <div class="modal-buttons">
+      <button class="btn-danger" onclick="hideModal(); deleteClient('${clientId}')">מחק</button>
+      <button class="btn-cancel" onclick="hideModal()">ביטול</button>
+    </div>
+  `);
+}
+
+// =============================================
+// STATE MANAGEMENT (per-client)
+// =============================================
+const years = [2020,2021,2022,2023,2024,2025];
+let state = {};
+
+function initState() {
+  // Reset to defaults
+  years.forEach(y => {
+    state[y] = {
+      // Income from work (שדה 158)
+      grossIncome: 0, taxWithheld: 0, bituachLeumi: 0, healthTax: 0,
+      miluimIncome: 0, miluimTax: 0,
+      unemploymentIncome: 0, unemploymentTax: 0, unemploymentBL: 0,
+      // Credit points
+      cp_resident: 2.25, cp_woman: 0, cp_kids05: 0, cp_kids617: 0, cp_kids18: 0,
+      cp_singleParent: 0, cp_soldier: 0, cp_immigrant: 0,
+      cp_degree1: 0, cp_degree2: 0, cp_degree3: 0,
+      cp_disability: 0, cp_settlement: 0, cp_other: 0,
+      // Months for each credit point (default 12)
+      cpm_resident:12,cpm_woman:12,cpm_kids05:12,cpm_kids617:12,cpm_kids18:12,
+      cpm_singleParent:12,cpm_soldier:12,cpm_immigrant:12,
+      cpm_degree1:12,cpm_degree2:12,cpm_degree3:12,
+      cpm_disability:12,cpm_settlement:12,cpm_other:12,
+      // Additional credits
+      pensionDeposit: 0, pensionEmployer: 0, lifeInsurance: 0, donations: 0,
+      // Capital income
+      age60plus: 0,
+      capGainTraded: 0, capGainTradedTax: 0, capGainTradedForeign: 0,
+      capGainUntraded: 0, capGainUntradedTax: 0, capGainUntradedForeign: 0,
+      capGainBonds: 0, capGainBondsTax: 0, capGainBondsForeign: 0,
+      interestDeposits: 0, interestDepositsTax: 0, interestDepositsForeign: 0,
+      interestBonds: 0, interestBondsTax: 0, interestBondsForeign: 0,
+      interestReal: 0, interestRealTax: 0, interestRealForeign: 0,
+      dividend: 0, dividendTax: 0, dividendForeign: 0,
+      dividendController: 0, dividendControllerTax: 0, dividendControllerForeign: 0,
+      capitalLossOffset: 0, capitalLossCarryforward: 0,
+      // Options 102
+      optExerciseValue: 0, optCostBasis: 0, optTaxWithheld: 0,
+      optIncomeTrack: 0, optIncomeTaxWithheld: 0,
+      // Rental
+      rentalMonthly: 0, rentalTrack: 1,
+      // Severance
+      severanceAmount: 0, lastSalary: 0, yearsWorked: 0, severanceTaxWithheld: 0, severanceExempt209: 0,
+    };
+  });
+  // Try load from localStorage (client-specific)
+  if (currentClientId) {
+    const saved = localStorage.getItem('taxCalc_data_' + currentClientId);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        years.forEach(y => {
+          if (parsed[y]) Object.assign(state[y], parsed[y]);
+        });
+      } catch(e) {}
+    }
+  }
+}
+
+function saveState() {
+  if (currentClientId) {
+    localStorage.setItem('taxCalc_data_' + currentClientId, JSON.stringify(state));
+  }
+  showToast('נתונים נשמרו — ' + (getCurrentClient()?.name || ''));
+}
+
+function autoSave() {
+  if (currentClientId) {
+    localStorage.setItem('taxCalc_data_' + currentClientId, JSON.stringify(state));
+  }
+}
+
+// =============================================
+// TAX CALCULATION ENGINE
+// =============================================
+function calcTaxByBrackets(income, year) {
+  if (income <= 0) return 0;
+  const brackets = TAX_DATA.brackets[year];
+  let tax = 0, prev = 0;
+  for (const b of brackets) {
+    if (income <= prev) break;
+    const taxable = Math.min(income, b.up) - prev;
+    if (taxable > 0) tax += taxable * b.r;
+    prev = b.up;
+  }
+  return Math.floor(tax);
+}
+
+function calcYear(year) {
+  const s = state[year];
+  const r = {}; // results
+
+  // Total taxable income from work
+  r.totalWorkIncome = s.grossIncome + s.miluimIncome + s.unemploymentIncome;
+
+  // Credit points
+  const cpKeys = ['resident','woman','kids05','kids617','kids18','singleParent','soldier','immigrant','degree1','degree2','degree3','disability','settlement','other'];
+  r.totalCreditPoints = 0;
+  cpKeys.forEach(k => {
+    r.totalCreditPoints += (s['cp_'+k] || 0) * (s['cpm_'+k] || 12) / 12;
+  });
+  r.creditPointsValue = r.totalCreditPoints * TAX_DATA.creditPointValue[year];
+
+  // Employer pension — NOT a deduction. Only relevant if exceeding exempt ceiling (already reflected in 106).
+  r.pensionEmployerDeduction = 0;
+  r.taxableWorkIncome = r.totalWorkIncome;
+
+  // Additional credits
+  r.pensionCredit = r.totalWorkIncome > 0 ? Math.floor(Math.min(s.pensionDeposit, r.totalWorkIncome * 0.07) * 0.35) : 0;
+  r.lifeInsuranceCredit = s.lifeInsurance > 0 ? Math.floor(Math.min(s.lifeInsurance, TAX_DATA.lifeInsuranceCap) * 0.25) : 0;
+  r.donationsCredit = s.donations >= 190 ? Math.floor(Math.min(s.donations, r.totalWorkIncome * 0.3) * 0.35) : 0;
+  r.totalAdditionalCredits = r.pensionCredit + r.lifeInsuranceCredit + r.donationsCredit;
+
+  // Tax by brackets on work income (after deductions)
+  r.taxBeforeCredits = calcTaxByBrackets(r.taxableWorkIncome, year);
+
+  // Section 125ג — interest exemption for low-income individuals
+  const grossInterest = (s.interestDeposits||0) + (s.interestBonds||0) + (s.interestReal||0);
+  const sec125Cap = TAX_DATA.interestExemptCap[year] || 0;
+  const sec125Threshold = TAX_DATA.interestExemptThreshold[year] || 0;
+  let sec125Exemption = 0;
+  if (grossInterest > 0 && sec125Cap > 0) {
+    if (r.totalWorkIncome <= sec125Threshold) {
+      sec125Exemption = Math.min(grossInterest, sec125Cap);
+    } else {
+      // Declining ceiling: exemption reduced by 2× the excess above threshold
+      const reducedCap = sec125Cap - 2 * (r.totalWorkIncome - sec125Threshold);
+      sec125Exemption = Math.min(grossInterest, Math.max(0, reducedCap));
+    }
+  }
+  r.interestExemption125 = sec125Exemption;
+
+  // Distribute exemption across interest types (deposits first, then bonds, then real)
+  let remainExempt = sec125Exemption;
+  const effectiveInterest = {};
+  ['interestDeposits', 'interestBonds', 'interestReal'].forEach(k => {
+    const gross = s[k] || 0;
+    const exempt = Math.min(remainExempt, gross);
+    effectiveInterest[k] = gross - exempt;
+    remainExempt -= exempt;
+  });
+
+  // Capital income
+  const capItems = [
+    {key:'capGainTraded', rate:0.25},
+    {key:'capGainUntraded', rate:0.25},
+    {key:'capGainBonds', rate:0.25},
+    {key:'interestDeposits', rate:0.25},
+    {key:'interestBonds', rate:0.25},
+    {key:'interestReal', rate:0.15},
+  ];
+
+  r.capitalTaxDetails = {};
+  let cumCapIncome = 0;
+  capItems.forEach(item => {
+    const income = effectiveInterest.hasOwnProperty(item.key) ? effectiveInterest[item.key] : (s[item.key] || 0);
+    let tax;
+    if (s.age60plus === 1 && income > 0) {
+      // Age 60+ gets marginal rates instead of flat
+      const totalWithCap = r.taxableWorkIncome + (s.optIncomeTrack || 0) + cumCapIncome + income;
+      const totalWithoutCap = r.taxableWorkIncome + (s.optIncomeTrack || 0) + cumCapIncome;
+      const fullTax = calcTaxByBrackets(totalWithCap, year);
+      const baseTax = calcTaxByBrackets(totalWithoutCap, year);
+      tax = Math.floor(Math.min(fullTax - baseTax, income * item.rate));
+    } else {
+      tax = Math.floor(income * item.rate);
+    }
+    r.capitalTaxDetails[item.key] = tax;
+    cumCapIncome += income;
+  });
+
+  // Dividends - always flat rate
+  r.capitalTaxDetails.dividend = Math.floor((s.dividend || 0) * 0.25);
+  r.capitalTaxDetails.dividendController = Math.floor((s.dividendController || 0) * 0.30);
+
+  // Capital loss offset
+  r.capitalLossCredit = -(s.capitalLossOffset || 0) * 0.25;
+
+  // Total capital income & tax
+  r.totalCapitalIncome = (s.capGainTraded||0) + (s.capGainUntraded||0) + (s.capGainBonds||0) +
+    (s.interestDeposits||0) + (s.interestBonds||0) + (s.interestReal||0) +
+    (s.dividend||0) + (s.dividendController||0) - (s.capitalLossOffset||0);
+
+  // Domestic tax withheld (refundable)
+  r.totalCapitalTaxPaid = (s.capGainTradedTax||0) + (s.capGainUntradedTax||0) + (s.capGainBondsTax||0) +
+    (s.interestDepositsTax||0) + (s.interestBondsTax||0) + (s.interestRealTax||0) +
+    (s.dividendTax||0) + (s.dividendControllerTax||0);
+
+  // Foreign tax paid (credited against liability but NOT refundable beyond it)
+  r.totalForeignTaxPaid = (s.capGainTradedForeign||0) + (s.capGainUntradedForeign||0) + (s.capGainBondsForeign||0) +
+    (s.interestDepositsForeign||0) + (s.interestBondsForeign||0) + (s.interestRealForeign||0) +
+    (s.dividendForeign||0) + (s.dividendControllerForeign||0);
+
+  r.totalCapitalTaxOwed = Object.values(r.capitalTaxDetails).reduce((a,b) => a+b, 0) + r.capitalLossCredit;
+
+  // Foreign tax credit: reduces liability but can't create a refund from foreign tax alone
+  // Credit is limited to tax owed (can't exceed 100% of liability)
+  r.foreignTaxCredit = Math.min(r.totalForeignTaxPaid, Math.max(0, r.totalCapitalTaxOwed));
+  r.capitalTaxAfterForeignCredit = r.totalCapitalTaxOwed - r.foreignTaxCredit;
+
+  // Refund = domestic tax paid - remaining liability after foreign credit
+  r.capitalRefund = r.totalCapitalTaxPaid - r.capitalTaxAfterForeignCredit;
+
+  // Options 102
+  r.optCapitalGain = Math.max((s.optExerciseValue||0) - (s.optCostBasis||0), 0);
+  r.optCapitalTax = Math.floor(r.optCapitalGain * 0.25);
+  // Income track option adds to work income brackets
+  const totalWithOpt = r.taxableWorkIncome + (s.optIncomeTrack||0);
+  r.optIncomeTax = calcTaxByBrackets(totalWithOpt, year) - calcTaxByBrackets(r.taxableWorkIncome, year);
+  r.optTotalTax = r.optCapitalTax + r.optIncomeTax;
+  r.optTotalTaxPaid = (s.optTaxWithheld||0) + (s.optIncomeTaxWithheld||0);
+  r.optRefund = r.optTotalTaxPaid - r.optTotalTax;
+
+  // Rental income
+  r.rentalYearly = (s.rentalMonthly||0) * 12;
+  const exemptMonthly = TAX_DATA.rentalExemptMonthly[year];
+
+  // Track 1: Exempt
+  let exemptAmount;
+  if (s.rentalMonthly <= exemptMonthly) {
+    exemptAmount = s.rentalMonthly;
+  } else if (s.rentalMonthly < exemptMonthly * 2) {
+    exemptAmount = exemptMonthly * 2 - s.rentalMonthly;
+  } else {
+    exemptAmount = 0;
+  }
+  const taxableRentalExempt = Math.max(s.rentalMonthly - exemptAmount, 0) * 12;
+  r.rentalTaxTrack1 = Math.floor(taxableRentalExempt * 0.10);
+
+  // Track 2: 10%
+  r.rentalTaxTrack2 = Math.floor(r.rentalYearly * 0.10);
+
+  // Track 3: Marginal
+  const totalWithRental = r.taxableWorkIncome + r.rentalYearly;
+  r.rentalTaxTrack3 = calcTaxByBrackets(totalWithRental, year) - calcTaxByBrackets(r.taxableWorkIncome, year);
+
+  r.rentalBestTrack = r.rentalYearly > 0 ? (r.rentalTaxTrack1 <= r.rentalTaxTrack2 && r.rentalTaxTrack1 <= r.rentalTaxTrack3 ? 1 :
+    (r.rentalTaxTrack2 <= r.rentalTaxTrack3 ? 2 : 3)) : 0;
+  r.rentalTax = s.rentalTrack === 1 ? r.rentalTaxTrack1 : (s.rentalTrack === 2 ? r.rentalTaxTrack2 : r.rentalTaxTrack3);
+
+  // Severance
+  const sevExemptPerYear = TAX_DATA.severanceExemptPerYear[year];
+  if (s.severanceExempt209 > 0) {
+    // Use section 9(7a) exempt amount (שדה 209)
+    r.severanceExempt = Math.min(s.severanceExempt209, s.severanceAmount || 0);
+  } else {
+    r.severanceExempt = s.severanceAmount > 0 ?
+      Math.min(s.severanceAmount, Math.min(Math.min((s.lastSalary||0)*1.5, sevExemptPerYear), sevExemptPerYear) * (s.yearsWorked||0)) : 0;
+  }
+  r.severanceTaxable = Math.max((s.severanceAmount||0) - r.severanceExempt, 0);
+  const totalWithSev = r.taxableWorkIncome + (s.optIncomeTrack||0) + r.severanceTaxable;
+  r.severanceTax = r.severanceTaxable > 0 ?
+    calcTaxByBrackets(totalWithSev, year) - calcTaxByBrackets(r.taxableWorkIncome + (s.optIncomeTrack||0), year) : 0;
+  r.severanceRefund = (s.severanceTaxWithheld||0) - r.severanceTax;
+
+  // Surtax — exempt interest (Section 125ג) excluded from taxable income
+  const totalAllIncome = r.taxableWorkIncome + r.severanceTaxable + (r.totalCapitalIncome - r.interestExemption125) + r.optCapitalGain +
+    (s.optIncomeTrack||0) + (s.rentalTrack === 1 ? taxableRentalExempt : r.rentalYearly);
+  r.surtax = totalAllIncome > TAX_DATA.surtaxThreshold[year] ?
+    Math.floor((totalAllIncome - TAX_DATA.surtaxThreshold[year]) * 0.03) : 0;
+
+  // Final calculation
+  r.netTaxOwed = Math.max(r.taxBeforeCredits - r.creditPointsValue - r.totalAdditionalCredits, 0);
+  r.totalTaxPaid = (s.taxWithheld||0) + (s.miluimTax||0) + (s.unemploymentTax||0);
+
+  // Excess credit points can offset capital tax
+  r.excessCredits = Math.min(
+    Math.max(r.creditPointsValue - Math.max(r.taxBeforeCredits - r.totalAdditionalCredits, 0), 0),
+    Math.max(r.totalCapitalTaxOwed, 0)
+  );
+
+  // capitalRefundAdjusted: domestic tax paid minus remaining liability after foreign credit
+  r.capitalRefundAdjusted = r.totalCapitalTaxOwed < 0 ?
+    r.totalCapitalTaxPaid :
+    r.totalCapitalTaxPaid - r.capitalTaxAfterForeignCredit + r.excessCredits;
+
+  // Total refund
+  r.totalRefund = (r.totalTaxPaid - r.netTaxOwed) + r.severanceRefund + r.capitalRefundAdjusted +
+    (r.optTotalTaxPaid - r.optTotalTax) - r.surtax - r.rentalTax;
+
+  return r;
+}
+
+// Multi-year summary with loss carryforward
+function calcSummary() {
+  const results = {};
+  years.forEach(y => results[y] = calcYear(y));
+
+  // Loss carryforward
+  const lossTracker = {};
+  let carryforward = 0;
+  years.forEach(y => {
+    const r = results[y];
+    const s = state[y];
+    const newLosses = (s.capitalLossCarryforward||0) + (r.totalCapitalIncome < 0 ? -r.totalCapitalIncome : 0);
+    const available = carryforward + newLosses;
+    const used = Math.min(available, Math.max(r.totalCapitalIncome, 0));
+    carryforward = available - used;
+    const savings = used * 0.25;
+    lossTracker[y] = { beginning: carryforward - available + used + newLosses - newLosses,
+      newLosses, available, capitalIncome: r.totalCapitalIncome, used, endBalance: carryforward, savings };
+  });
+
+  // Recalculate adjusted refunds
+  const adjusted = {};
+  years.forEach(y => {
+    const r = results[y];
+    const lt = lossTracker[y];
+    const origCapIncome = r.totalCapitalIncome;
+    const adjCapIncome = Math.max(origCapIncome - lt.used, 0);
+    const adjCapTax = origCapIncome > 0 ? r.totalCapitalTaxOwed / origCapIncome * adjCapIncome : (origCapIncome < 0 ? r.totalCapitalTaxOwed : 0);
+    const adjForeignCredit = Math.min(r.totalForeignTaxPaid || 0, Math.max(0, adjCapTax));
+    const adjCapTaxAfterForeign = adjCapTax - adjForeignCredit;
+    const adjExcessCredits = Math.min(r.excessCredits, Math.max(adjCapTaxAfterForeign, 0));
+    const adjCapRefund = adjCapTax < 0 ? r.totalCapitalTaxPaid : r.totalCapitalTaxPaid - adjCapTaxAfterForeign + adjExcessCredits;
+
+    const workRefund = r.totalTaxPaid - r.netTaxOwed;
+    const adjRefund = workRefund + r.severanceRefund + r.optRefund + adjCapRefund - r.surtax - r.rentalTax;
+
+    adjusted[y] = {
+      workRefund,
+      severanceRefund: r.severanceRefund,
+      optRefund: r.optRefund,
+      capitalRefund: adjCapRefund,
+      surtax: r.surtax,
+      rentalTax: r.rentalTax,
+      totalRefund: adjRefund,
+      lossSavings: lt.savings
+    };
+  });
+
+  return { results, lossTracker, adjusted };
+}
+
+// =============================================
+// UI RENDERING
+// =============================================
+function formatNumber(n) {
+  if (n === 0) return '0';
+  return Math.round(n).toLocaleString('he-IL');
+}
+
+function fmt(n) {
+  const rounded = Math.round(n);
+  if (rounded === 0) return '<span class="computed-value">0</span>';
+  const cls = rounded > 0 ? 'positive' : 'negative';
+  return `<span class="computed-value ${cls}">${rounded > 0 ? '' : '-'}${Math.abs(rounded).toLocaleString('he-IL')}</span>`;
+}
+
+function fmtPlain(n) {
+  return Math.round(n).toLocaleString('he-IL');
+}
+
+function inputField(year, key, placeholder='') {
+  const val = state[year][key] || '';
+  const formula = state[year]['_formula_' + key] || '';
+  const displayVal = formula || (val || '');
+  const title = formula ? 'נוסחה: ' + formula + ' = ' + val : '';
+  return `<input type="text" inputmode="decimal" class="input-blue${formula ? ' has-formula' : ''}" data-year="${year}" data-key="${key}" value="${displayVal}" placeholder="${placeholder}" title="${title}">`;
+}
+
+// Safely evaluate a math expression (only digits, +, -, *, /, ., parentheses, commas, spaces)
+function evalFormula(expr) {
+  // Remove commas (thousand separators) and spaces
+  const cleaned = expr.replace(/,/g, '').replace(/\s/g, '');
+  // Validate: only allow digits, operators, dots, parens
+  if (!/^[\d+\-*/().]+$/.test(cleaned)) return null;
+  // Prevent empty expressions or dangerous patterns
+  if (!cleaned || /[+\-*/]{2,}/.test(cleaned)) return null;
+  try {
+    const result = Function('"use strict"; return (' + cleaned + ')')();
+    if (typeof result === 'number' && isFinite(result)) return Math.round(result * 100) / 100;
+    return null;
+  } catch(e) { return null; }
+}
+
+function monthsField(year, key) {
+  const val = state[year][key] || 12;
+  return `<input type="number" data-year="${year}" data-key="${key}" value="${val}" min="0" max="12" step="1" style="width:60px">`;
+}
+
+function buildDocsPanel() {
+  const sections = [
+    { title: 'הכנסה מעבודה', items: [
+      {name:'טופס 106', detail:'אישור שנתי על הכנסות ותשלומי מס מכל מעסיק', source:'מהמעסיק / מערכת שכר'},
+      {name:'תלושי שכר (דצמבר)', detail:'תלוש אחרון לאימות סה"כ שנתי', source:'מהמעסיק'},
+      {name:'אישור על דמי אבטלה', detail:'סכום דמי אבטלה שהתקבלו בשנת המס', source:'ביטוח לאומי'},
+      {name:'טופס 161 (אם רלוונטי)', detail:'מענק פרישה / פיצויי פיטורים', source:'מהמעסיק'},
+    ]},
+    { title: 'הכנסות הון וניירות ערך', items: [
+      {name:'טופס 867 (בנקים + ברוקרים)', detail:'ריכוז שנתי של רווחי/הפסדי הון, ריבית, דיבידנדים', source:'כל בנק / בית השקעות'},
+      {name:'אישור ניכוי מס במקור על הכנסות הון', detail:'מס שנוכה על רווחים, ריבית, דיבידנדים', source:'בנק / ברוקר'},
+      {name:'דוחות עסקאות (אם ללא 867)', detail:'פירוט מכירות/רכישות ני"ע לחישוב רווח הון', source:'פלטפורמת מסחר'},
+      {name:'אישור הפסד הון מועבר', detail:'שומה או אישור על הפסדים משנים קודמות', source:'פקיד שומה / דוח קודם'},
+    ]},
+    { title: 'הכנסה משכירות', items: [
+      {name:'חוזה שכירות', detail:'סכום שכ"ד חודשי, תקופת השכירות', source:'העתק החוזה'},
+      {name:'קבלות/אישורי תשלום שכ"ד', detail:'הוכחת הכנסה בפועל', source:'שוכר / חשבון בנק'},
+      {name:'קבלות הוצאות (במסלול 3 בלבד)', detail:'תיקונים, ביטוח, ריבית משכנתא, פחת', source:'ספקים / בנק'},
+    ]},
+    { title: 'נקודות זיכוי וזיכויים', items: [
+      {name:'תעודת זהות (+ ספח)', detail:'לאימות מצב משפחתי, ילדים, תושבות', source:'משרד הפנים'},
+      {name:'תעודת שחרור מצה"ל', detail:'לזיכוי חייל/ת משוחרר/ת', source:'צה"ל'},
+      {name:'אישור עלייה (טופס א/2)', detail:'לזיכוי עולה חדש/ה', source:'משרד הקליטה'},
+      {name:'אישור סיום תואר', detail:'ראשון / שני / שלישי', source:'מוסד אקדמי'},
+      {name:'אישור נכות (90%+)', detail:'מביטוח לאומי או ועדה רפואית', source:'ביטוח לאומי'},
+      {name:'אישור ישוב מזכה', detail:'תעודת תושב ביישוב מזכה', source:'רשות מקומית'},
+      {name:'אישור הפקדה לפנסיה', detail:'סכום הפקדת עובד שנתי', source:'מהמעסיק / חב\' ביטוח'},
+      {name:'אישור ביטוח חיים', detail:'פרמיה שנתית ששולמה', source:'חברת ביטוח'},
+      {name:'קבלות תרומות (שדה 046)', detail:'תרומות למוסדות מוכרים (מינ\' 190 ₪)', source:'המוסד המוכר'},
+    ]},
+    { title: 'מסמכים כלליים', items: [
+      {name:'צילום תעודת זהות + ספח', detail:'של הנישום ובן/בת הזוג', source:'—'},
+      {name:'אישור ניהול חשבון בנק', detail:'לקבלת ההחזר ישירות לחשבון', source:'הבנק'},
+      {name:'דוח שנתי קודם (אם הוגש)', detail:'לבדיקת עקביות והפסדים מועברים', source:'פקיד שומה'},
+      {name:'ייפוי כוח (אם מגישים דרך מייצג)', detail:'חתום ע"י הנישום', source:'רו"ח / יועץ מס'},
+    ]},
+  ];
+
+  let checkedCount = 0;
+  const totalCount = sections.reduce((a,s) => a + s.items.length, 0);
+  // Load checked state
+  const checkedDocs = JSON.parse(localStorage.getItem('taxCalc_docs_' + currentClientId) || '{}');
+
+  let html = `<div class="stats-grid">
+    <div class="stat-card info">
+      <div class="stat-value" id="docsCount">${Object.values(checkedDocs).filter(v=>v).length}/${totalCount}</div>
+      <div class="stat-label">מסמכים שנאספו</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-value" id="docsPercent">${Math.round(Object.values(checkedDocs).filter(v=>v).length/totalCount*100)}%</div>
+      <div class="stat-label">התקדמות</div>
+    </div>
+  </div>
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" id="docsProgress" style="width:${Object.values(checkedDocs).filter(v=>v).length/totalCount*100}%"></div>
+  </div>`;
+
+  sections.forEach((sec, si) => {
+    html += `<div class="section-card">
+      <div class="section-title">📂 ${sec.title}</div>`;
+    sec.items.forEach((item, ii) => {
+      const id = `doc_${si}_${ii}`;
+      const checked = checkedDocs[id] || false;
+      html += `<div class="checklist-item ${checked ? 'checked' : ''}">
+        <input type="checkbox" id="${id}" ${checked ? 'checked' : ''} onchange="toggleDoc('${id}', this)">
+        <div class="checklist-info">
+          <div class="doc-name">${item.name}</div>
+          <div class="doc-detail">${item.detail}</div>
+          <div class="doc-source">📍 ${item.source}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  html += `<div class="tip-box">💡 שמור את כל המסמכים בתיקייה אחת לפי שנת מס. ניתן להגיש דוח בדיעבד עד 6 שנים לאחר שנת המס.</div>`;
+
+  return html;
+}
+
+function buildRefPanel() {
+  let html = '';
+
+  // Tax brackets table
+  html += `<div class="section-card">
+    <div class="section-title">📊 מדרגות מס הכנסה (הכנסה מיגיעה אישית)</div>
+    <table class="data-table">
+      <thead><tr><th>שיעור מס</th><th></th>`;
+  years.forEach(y => html += `<th>${y}</th>`);
+  html += `</tr></thead><tbody>`;
+
+  const rates = [10,14,20,31,35,47,50];
+  const labels = ['עד','עד','עד','עד','עד','עד','מעל'];
+  rates.forEach((rate, i) => {
+    html += `<tr><td>${rate}%</td><td>${labels[i]}</td>`;
+    years.forEach(y => {
+      const bracket = TAX_DATA.brackets[y][i];
+      html += `<td>${bracket.up === Infinity ? '∞' : formatNumber(bracket.up)}</td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Additional parameters
+  html += `<div class="section-card">
+    <div class="section-title">📋 ספים נוספים</div>
+    <table class="data-table">
+      <thead><tr><th>פרמטר</th>`;
+  years.forEach(y => html += `<th>${y}</th>`);
+  html += `</tr></thead><tbody>`;
+
+  const params = [
+    {label: 'שווי נקודת זיכוי (שנתי)', data: TAX_DATA.creditPointValue},
+    {label: 'סף מס יסף 3%', data: TAX_DATA.surtaxThreshold},
+    {label: 'תקרת פטור פיצויים (לשנת עבודה)', data: TAX_DATA.severanceExemptPerYear},
+    {label: 'תקרת פטור שכ"ד למגורים (חודשי)', data: TAX_DATA.rentalExemptMonthly},
+  ];
+  params.forEach(p => {
+    html += `<tr><td>${p.label}</td>`;
+    years.forEach(y => html += `<td>${formatNumber(p.data[y])}</td>`);
+    html += `</tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Capital income rates
+  html += `<div class="section-card">
+    <div class="section-title">💰 שיעורי מס על הכנסות הון</div>
+    <table class="data-table">
+      <thead><tr><th>סוג הכנסה</th><th>שיעור מס</th><th>הערות</th></tr></thead>
+      <tbody>
+        <tr><td>רווח הון מני"ע סחירים</td><td>25%</td><td>בעל מניות מהותי: 30%</td></tr>
+        <tr><td>ריבית והצמדה</td><td>25%</td><td>בעל מניות מהותי: 30%</td></tr>
+        <tr><td>דיבידנד</td><td>25%</td><td>בעל מניות מהותי: 30%</td></tr>
+        <tr><td>אג"ח צמוד / מניות</td><td>15%</td><td>אג"ח לא צמוד: 25%</td></tr>
+        <tr><td>אופציות 102 — מסלול הוני</td><td>25%</td><td></td></tr>
+        <tr><td>אופציות 102 — מסלול פירותי</td><td>שולי</td><td>לפי מדרגות מס הכנסה</td></tr>
+      </tbody>
+    </table>
+  </div>`;
+
+  return html;
+}
+
+function buildYearPanel(year) {
+  const s = state[year];
+  const r = calcYear(year);
+
+  let html = `
+  <div class="year-quick-nav">
+    <button class="year-section-btn" onclick="scrollToSection('income_${year}')">💼 הכנסה</button>
+    <button class="year-section-btn" onclick="scrollToSection('credits_${year}')">⭐ נקודות זיכוי</button>
+    <button class="year-section-btn" onclick="scrollToSection('additional_${year}')">🎁 זיכויים</button>
+    <button class="year-section-btn" onclick="scrollToSection('brackets_${year}')">📊 מדרגות</button>
+    <button class="year-section-btn" onclick="scrollToSection('capital_${year}')">💰 הון</button>
+    <button class="year-section-btn" onclick="scrollToSection('options_${year}')">📈 אופציות</button>
+    <button class="year-section-btn" onclick="scrollToSection('rental_${year}')">🏠 שכירות</button>
+    <button class="year-section-btn" onclick="scrollToSection('severance_${year}')">📦 פיצויים</button>
+    <button class="year-section-btn" onclick="scrollToSection('final_${year}')">✅ סיכום</button>
+    <button class="year-section-btn" onclick="scrollToSection('upload_${year}')">📎 מסמכים</button>
+    <button class="year-section-btn" onclick="scrollToSection('checklist_${year}')">✅ צ'קליסט</button>
+  </div>`;
+
+  // Quick result card
+  html += `<div class="stats-grid">
+    <div class="stat-card ${r.totalRefund >= 0 ? 'positive' : 'negative'}">
+      <div class="stat-value">${r.totalRefund >= 0 ? '+' : ''}${formatNumber(r.totalRefund)}</div>
+      <div class="stat-label">${r.totalRefund >= 0 ? 'החזר מס' : 'חוב מס'} — ${year}</div>
+    </div>
+    <div class="stat-card info">
+      <div class="stat-value">${formatNumber(r.totalWorkIncome)}</div>
+      <div class="stat-label">הכנסה ברוטו מעבודה</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-value">${formatNumber(r.creditPointsValue)}</div>
+      <div class="stat-label">שווי נקודות זיכוי</div>
+    </div>
+    <div class="stat-card ${r.totalCapitalIncome >= 0 ? 'positive' : 'negative'}">
+      <div class="stat-value">${formatNumber(r.totalCapitalIncome)}</div>
+      <div class="stat-label">הכנסות הון נטו</div>
+    </div>
+  </div>`;
+
+  // ---- INCOME SECTION ----
+  html += `<div class="section-card" id="income_${year}">
+    <div class="section-title">💼 הכנסת עבודה</div>
+    <div class="form-row"><label>הכנסה שנתית ברוטו (שדה 158)</label>${inputField(year,'grossIncome')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>מס הכנסה שנוכה במקור (שדה 042)</label>${inputField(year,'taxWithheld')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>ביטוח לאומי ששולם</label>${inputField(year,'bituachLeumi')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>מס בריאות ששולם</label>${inputField(year,'healthTax')}<span class="unit">₪</span></div>
+
+    <div class="section-subtitle" style="margin-top:16px">תגמול מילואים</div>
+    <div class="form-row"><label>הכנסה מתגמול מילואים (שנתי)</label>${inputField(year,'miluimIncome')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>מס הכנסה שנוכה במקור על מילואים</label>${inputField(year,'miluimTax')}<span class="unit">₪</span></div>
+
+    <div class="section-subtitle" style="margin-top:16px">דמי אבטלה</div>
+    <div class="form-row"><label>דמי אבטלה מביטוח לאומי (הכנסה שנתית)</label>${inputField(year,'unemploymentIncome')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>מס הכנסה שנוכה במקור על דמי אבטלה</label>${inputField(year,'unemploymentTax')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>ביטוח לאומי שנוכה על דמי אבטלה</label>${inputField(year,'unemploymentBL')}<span class="unit">₪</span></div>
+
+    <div class="summary-row total">
+      <label>סה"כ הכנסה חייבת מעבודה</label>
+      <span class="computed-value">${formatNumber(r.totalWorkIncome)}</span>
+      <span class="unit">₪</span>
+    </div>
+    ${r.pensionEmployerDeduction > 0 ? `
+    <div class="summary-row" style="margin-top:4px">
+      <label>ניכוי הפרשת מעסיק לקצבה (שדה 248)</label>
+      <span class="computed-value positive">-${formatNumber(r.pensionEmployerDeduction)}</span>
+      <span class="unit">₪</span>
+    </div>
+    <div class="summary-row total">
+      <label>הכנסה חייבת לאחר ניכויים</label>
+      <span class="computed-value">${formatNumber(r.taxableWorkIncome)}</span>
+      <span class="unit">₪</span>
+    </div>` : ''}
+  </div>`;
+
+  // ---- CREDIT POINTS ----
+  const cpItems = [
+    {key:'resident', label:'תושב/ת ישראל', hint:'אוטומטי לכל תושב', default:2.25},
+    {key:'woman', label:'אישה (חצי נקודה נוספת)', hint:'הזן 0.5 אם רלוונטי'},
+    {key:'kids05', label:'ילדים גיל 0-5 (1.5 נ.ז. לילד)', hint:'מס\' ילדים × 1.5'},
+    {key:'kids617', label:'ילדים גיל 6-17 (1 נ.ז. לילד)', hint:'מס\' ילדים × 1'},
+    {key:'kids18', label:'ילדים גיל 18 בשנת המס', hint:'1 נ.ז. לילד'},
+    {key:'singleParent', label:'הורה יחיד/ה', hint:'1 נ.ז. אם רלוונטי'},
+    {key:'soldier', label:'חייל/ת משוחרר/ת', hint:'נ.ז. לפי זכאות'},
+    {key:'immigrant', label:'עולה חדש/ה', hint:'נ.ז. לפי חודשי זכאות'},
+    {key:'degree1', label:'תואר ראשון (שנה לאחר סיום)', hint:'1 נ.ז.'},
+    {key:'degree2', label:'תואר שני (שנה לאחר סיום)', hint:'0.5 נ.ז.'},
+    {key:'degree3', label:'תואר שלישי (שנה לאחר סיום)', hint:'1 נ.ז.'},
+    {key:'disability', label:'נכות 90%+ / עיוור', hint:'2 נ.ז.'},
+    {key:'settlement', label:'ישוב מזכה', hint:'לפי רשימת ישובים'},
+    {key:'other', label:'נקודות זיכוי נוספות', hint:'פרט בהערה'},
+  ];
+
+  html += `<div class="section-card" id="credits_${year}">
+    <div class="section-title">⭐ נקודות זיכוי</div>
+    <div style="display:grid;grid-template-columns:1fr 100px 70px 50px;gap:8px;padding:4px 0;font-size:0.8rem;color:var(--text-muted);font-weight:600">
+      <span>סוג הזיכוי</span><span>נ.ז.</span><span>חודשים</span><span></span>
+    </div>`;
+  cpItems.forEach(cp => {
+    html += `<div style="display:grid;grid-template-columns:1fr 100px 70px 50px;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center">
+      <div><label style="font-size:0.85rem;color:var(--text-secondary)">${cp.label}</label>
+        <div style="font-size:0.72rem;color:var(--text-muted)">${cp.hint}</div></div>
+      ${inputField(year, 'cp_'+cp.key)}
+      ${monthsField(year, 'cpm_'+cp.key)}
+      <span></span>
+    </div>`;
+  });
+  html += `<div class="summary-row total">
+    <label>סה"כ נקודות זיכוי</label>
+    <span class="computed-value">${r.totalCreditPoints.toFixed(2)}</span>
+    <span class="unit">נ.ז.</span>
+  </div>
+  <div class="summary-row">
+    <label>שווי נקודות זיכוי</label>
+    <span class="computed-value positive">${formatNumber(r.creditPointsValue)}</span>
+    <span class="unit">₪</span>
+  </div>
+  </div>`;
+
+  // ---- ADDITIONAL CREDITS ----
+  html += `<div class="section-card" id="additional_${year}">
+    <div class="section-title">🎁 זיכויים והטבות נוספות</div>
+    <div style="display:grid;grid-template-columns:1fr 150px 80px 120px;gap:8px;padding:4px 0;font-size:0.8rem;color:var(--text-muted);font-weight:600">
+      <span>סוג</span><span>סכום הפקדה שנתי</span><span>שיעור זיכוי</span><span>זיכוי ממס</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 150px 80px 120px;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center">
+      <label style="font-size:0.85rem;color:var(--text-secondary)">הפקדה לפנסיה — חלק עובד (שדה 045)</label>
+      ${inputField(year,'pensionDeposit')}
+      <span class="unit">35%</span>
+      <span class="computed-value positive">${formatNumber(r.pensionCredit)}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 150px 80px 120px;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center">
+      <label style="font-size:0.85rem;color:var(--text-secondary)">ביטוח חיים</label>
+      ${inputField(year,'lifeInsurance')}
+      <span class="unit">25%</span>
+      <span class="computed-value positive">${formatNumber(r.lifeInsuranceCredit)}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 150px 80px 120px;gap:8px;padding:8px 0;align-items:center">
+      <label style="font-size:0.85rem;color:var(--text-secondary)">תרומות למוסדות מוכרים (שדה 046)</label>
+      ${inputField(year,'donations')}
+      <span class="unit">35%</span>
+      <span class="computed-value positive">${formatNumber(r.donationsCredit)}</span>
+    </div>
+    <div class="summary-row total">
+      <label>סה"כ זיכויים נוספים</label>
+      <span class="computed-value positive">${formatNumber(r.totalAdditionalCredits)}</span>
+      <span class="unit">₪</span>
+    </div>
+  </div>`;
+
+  // ---- TAX BRACKETS ----
+  const brackets = TAX_DATA.brackets[year];
+  html += `<div class="section-card" id="brackets_${year}">
+    <div class="section-title">📊 טבלת מדרגות מס ${year}</div>
+    <table class="data-table">
+      <thead><tr><th>מדרגה</th><th>מהכנסה</th><th>עד הכנסה</th><th>שיעור מס</th><th>מס על שכבה</th></tr></thead>
+      <tbody>`;
+  let prev = 0;
+  brackets.forEach((b, i) => {
+    const taxable = Math.max(Math.min(r.taxableWorkIncome, b.up) - prev, 0);
+    const layerTax = r.taxableWorkIncome > prev ? taxable * b.r : 0;
+    html += `<tr>
+      <td>${i+1}</td>
+      <td>${formatNumber(prev)}</td>
+      <td>${b.up === Infinity ? 'ומעלה' : formatNumber(b.up)}</td>
+      <td>${Math.round(b.r*100)}%</td>
+      <td>${formatNumber(layerTax)}</td>
+    </tr>`;
+    prev = b.up;
+  });
+  html += `</tbody></table>
+    <div class="summary-row total" style="margin-top:8px">
+      <label>סה"כ מס לפני זיכויים</label>
+      <span class="computed-value negative">${formatNumber(r.taxBeforeCredits)}</span>
+      <span class="unit">₪</span>
+    </div>
+  </div>`;
+
+  // ---- CAPITAL INCOME ----
+  const capRows = [
+    {key:'capGainTraded', label:'רווחי הון — ני"ע סחירים (שדה 199)', rate:'25%'},
+    {key:'capGainUntraded', label:'רווחי הון — ני"ע לא סחירים (שדה 199)', rate:'25%'},
+    {key:'capGainBonds', label:'רווחי הון — אג"ח/מק"מ (שדה 199)', rate:'25%'},
+    {key:'interestDeposits', label:'ריבית מפקדונות (שדה 206)', rate:'25%'},
+    {key:'interestBonds', label:'ריבית מאג"ח סחיר (שדה 206)', rate:'25%'},
+    {key:'interestReal', label:'ריבית ריאלית / מוטב (שדה 206)', rate:'15%'},
+    {key:'dividend', label:'דיבידנד (שדה 166)', rate:'25%'},
+    {key:'dividendController', label:'דיבידנד מבעל שליטה (שדה 166)', rate:'30%'},
+  ];
+
+  html += `<div class="section-card" id="capital_${year}">
+    <div class="section-title">💰 הכנסות הון וניירות ערך (מטפסי 867)</div>
+    <div class="form-row" style="align-items:center">
+      <label>גיל 60+ בשנת המס<div class="hint">הכנסות פסיביות ימוסו לפי מדרגות במקום שיעור קבוע</div></label>
+      <label class="toggle-switch">
+        <input type="checkbox" data-year="${year}" data-key="age60plus" ${s.age60plus ? 'checked' : ''} onchange="state[${year}].age60plus = this.checked ? 1 : 0; autoSave(); renderAllPanels();">
+        <span class="toggle-slider"></span>
+      </label>
+      <span class="unit"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 110px 110px 110px 60px 100px;gap:6px;padding:8px 0;font-size:0.75rem;color:var(--text-muted);font-weight:600;margin-top:12px">
+      <span>סוג הכנסה</span><span>הכנסה/רווח</span><span>מס נוכה בארץ</span><span>מס חו"ל</span><span>שיעור</span><span>מס חייב</span>
+    </div>`;
+  capRows.forEach(cr => {
+    html += `<div style="display:grid;grid-template-columns:1fr 110px 110px 110px 60px 100px;gap:6px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center">
+      <label style="font-size:0.82rem;color:var(--text-secondary)">${cr.label}</label>
+      ${inputField(year,cr.key)}
+      ${inputField(year,cr.key+'Tax')}
+      ${inputField(year,cr.key+'Foreign')}
+      <span class="unit">${cr.rate}</span>
+      <span class="computed-value">${formatNumber(r.capitalTaxDetails[cr.key] || 0)}</span>
+    </div>`;
+  });
+
+  html += `<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+    <div class="form-row"><label>(-) הפסד הון לקיזוז בשנה השוטפת</label>${inputField(year,'capitalLossOffset')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>הפסדי הון להעברה לשנים הבאות<div class="hint">לידיעה בלבד — לא משפיע על חישוב השנה</div></label>${inputField(year,'capitalLossCarryforward')}<span class="unit">₪</span></div>
+  </div>
+  <div class="summary-row total">
+    <label>סה"כ הכנסות הון</label>
+    <span class="computed-value ${r.totalCapitalIncome >= 0 ? 'positive' : 'negative'}">${formatNumber(r.totalCapitalIncome)}</span>
+    <span class="unit">₪</span>
+  </div>
+  ${r.interestExemption125 > 0 ? `<div class="summary-row">
+    <label>(-) פטור ריבית סעיף 125ג<div class="hint">עד ${formatNumber(TAX_DATA.interestExemptCap[year])}₪ כשהכנסת עבודה מתחת ל-${formatNumber(TAX_DATA.interestExemptThreshold[year])}₪</div></label>
+    <span class="computed-value positive">-${formatNumber(r.interestExemption125)}</span>
+    <span class="unit">₪</span>
+  </div>` : ''}
+  <div class="summary-row">
+    <label>מס חייב על הכנסות הון</label>
+    <span class="computed-value">${formatNumber(r.totalCapitalTaxOwed)}</span>
+    <span class="unit">₪</span>
+  </div>
+  <div class="summary-row">
+    <label>(-) זיכוי מס חו"ל<div class="hint">מוגבל לגובה המס החייב — עודף לא מוחזר</div></label>
+    <span class="computed-value">${r.foreignTaxCredit > 0 ? '-' : ''}${formatNumber(r.foreignTaxCredit)}</span>
+    <span class="unit">₪</span>
+  </div>
+  <div class="summary-row">
+    <label>מס נוכה במקור בארץ</label>
+    <span class="computed-value">${formatNumber(r.totalCapitalTaxPaid)}</span>
+    <span class="unit">₪</span>
+  </div>
+  <div class="summary-row total">
+    <label>החזר / (חוב) מס על הכנסות הון</label>
+    <span class="computed-value ${r.capitalRefund >= 0 ? 'positive' : 'negative'}">${r.capitalRefund >= 0 ? '+' : ''}${formatNumber(r.capitalRefund)}</span>
+    <span class="unit">₪</span>
+  </div>
+  </div>`;
+
+  // ---- OPTIONS 102 ----
+  html += `<div class="section-card" id="options_${year}">
+    <div class="section-title">📈 הכנסה ממימוש אופציות (סעיף 102)</div>
+    <div class="section-subtitle">102 הוני (נאמן) — מס 25% על רווח הון</div>
+    <div class="form-row"><label>שווי מימוש (סה"כ תמורה)</label>${inputField(year,'optExerciseValue')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>עלות מקורית (מחיר הקצאה)</label>${inputField(year,'optCostBasis')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>רווח הון חייב</label><span class="computed-value">${formatNumber(r.optCapitalGain)}</span><span class="unit">₪</span></div>
+    <div class="form-row"><label>מס חייב (25%)</label><span class="computed-value">${formatNumber(r.optCapitalTax)}</span><span class="unit">₪</span></div>
+    <div class="form-row"><label>מס שנוכה במקור ע"י הנאמן</label>${inputField(year,'optTaxWithheld')}<span class="unit">₪</span></div>
+
+    <div class="section-subtitle" style="margin-top:16px">102 פירותי (ללא נאמן) — מס שולי</div>
+    <div class="form-row"><label>הכנסת עבודה ממימוש (שווי)<div class="hint">בד"כ כלול בהכנסה ברוטו מטופס 106 — אם לא, הזן כאן</div></label>${inputField(year,'optIncomeTrack')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>מס שנוכה במקור על מימוש פירותי</label>${inputField(year,'optIncomeTaxWithheld')}<span class="unit">₪</span></div>
+
+    <div class="summary-row">
+      <label>החזר / (חוב) מס על אופציות</label>
+      <span class="computed-value ${r.optRefund >= 0 ? 'positive' : 'negative'}">${r.optRefund >= 0 ? '+' : ''}${formatNumber(r.optRefund)}</span>
+      <span class="unit">₪</span>
+    </div>
+  </div>`;
+
+  // ---- RENTAL ----
+  const exemptMonthly = TAX_DATA.rentalExemptMonthly[year];
+  html += `<div class="section-card" id="rental_${year}">
+    <div class="section-title">🏠 הכנסה משכירות דירת מגורים</div>
+    <div class="form-row"><label>הכנסה חודשית משכירות (ברוטו)</label>${inputField(year,'rentalMonthly')}<span class="unit">₪/חודש</span></div>
+    <div class="form-row"><label>הכנסה שנתית משכירות</label><span class="computed-value">${formatNumber(r.rentalYearly)}</span><span class="unit">₪</span></div>
+    <div class="form-row">
+      <label>מסלול מיסוי<div class="hint">1=פטור | 2=10% | 3=מדרגות</div></label>
+      <select data-year="${year}" data-key="rentalTrack">
+        <option value="1" ${s.rentalTrack==1?'selected':''}>1 — פטור</option>
+        <option value="2" ${s.rentalTrack==2?'selected':''}>2 — מס 10%</option>
+        <option value="3" ${s.rentalTrack==3?'selected':''}>3 — מדרגות</option>
+      </select>
+      <span class="unit"></span>
+    </div>`;
+
+  if (r.rentalYearly > 0) {
+    html += `<div style="margin-top:16px;display:grid;grid-template-columns:1fr 120px 100px;gap:8px;padding:8px 0;font-size:0.78rem;color:var(--text-muted);font-weight:600">
+      <span>השוואת מסלולים</span><span>מס</span><span></span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 120px 100px;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center">
+      <span style="font-size:0.85rem">מסלול 1: פטור (תקרה ${formatNumber(exemptMonthly)} ₪/חודש)</span>
+      <span class="computed-value">${formatNumber(r.rentalTaxTrack1)}</span>
+      ${r.rentalBestTrack === 1 ? '<span class="badge badge-success">מומלץ ✓</span>' : '<span></span>'}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 120px 100px;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center">
+      <span style="font-size:0.85rem">מסלול 2: מס 10%</span>
+      <span class="computed-value">${formatNumber(r.rentalTaxTrack2)}</span>
+      ${r.rentalBestTrack === 2 ? '<span class="badge badge-success">מומלץ ✓</span>' : '<span></span>'}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 120px 100px;gap:8px;padding:8px 0;align-items:center">
+      <span style="font-size:0.85rem">מסלול 3: מדרגות מס</span>
+      <span class="computed-value">${formatNumber(r.rentalTaxTrack3)}</span>
+      ${r.rentalBestTrack === 3 ? '<span class="badge badge-success">מומלץ ✓</span>' : '<span></span>'}
+    </div>`;
+  }
+
+  html += `<div class="summary-row total">
+    <label>מס חייב על שכירות (מסלול ${s.rentalTrack})</label>
+    <span class="computed-value negative">${formatNumber(r.rentalTax)}</span>
+    <span class="unit">₪</span>
+  </div></div>`;
+
+  // ---- SEVERANCE ----
+  html += `<div class="section-card" id="severance_${year}">
+    <div class="section-title">📦 פיצויי פיטורים / מענק פרישה (טופס 161)</div>
+    <div class="form-row"><label>סה"כ מענק פרישה / פיצויים שהתקבלו</label>${inputField(year,'severanceAmount')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>משכורת אחרונה (חודשית)</label>${inputField(year,'lastSalary')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>מספר שנות עבודה (כולל חלקי שנה)</label>${inputField(year,'yearsWorked')}<span class="unit">שנים</span></div>
+    <div class="form-row"><label>מס שנוכה במקור על הפיצויים</label>${inputField(year,'severanceTaxWithheld')}<span class="unit">₪</span></div>
+    <div class="form-row"><label>פיצויים פטורים לפי סעיף 9(7א)</label>${inputField(year,'severanceExempt209')}<span class="unit">₪</span></div>
+
+    <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+      <div class="section-subtitle">חישוב פטור ממס</div>
+      <div class="form-row"><label>תקרת פטור לשנה (${year})</label><span class="computed-value">${formatNumber(TAX_DATA.severanceExemptPerYear[year])}</span><span class="unit">₪/שנה</span></div>
+      <div class="form-row"><label>סכום פטור ממס</label><span class="computed-value positive">${formatNumber(r.severanceExempt)}</span><span class="unit">₪</span></div>
+      <div class="form-row"><label>סכום חייב במס</label><span class="computed-value">${formatNumber(r.severanceTaxable)}</span><span class="unit">₪</span></div>
+      <div class="form-row"><label>מס משוער על חלק חייב</label><span class="computed-value negative">${formatNumber(r.severanceTax)}</span><span class="unit">₪</span></div>
+    </div>
+    <div class="summary-row total">
+      <label>החזר/(חוב) מס על פיצויים</label>
+      <span class="computed-value ${r.severanceRefund >= 0 ? 'positive' : 'negative'}">${r.severanceRefund >= 0 ? '+' : ''}${formatNumber(r.severanceRefund)}</span>
+      <span class="unit">₪</span>
+    </div>
+    <div class="tip-box">💡 ניתן לבצע פריסת מס קדימה/אחורה — מומלץ להתייעץ עם יועץ מס</div>
+  </div>`;
+
+  // ---- SURTAX ----
+  html += `<div class="section-card">
+    <div class="section-title">⚠️ מס יסף (3%)</div>
+    <div class="form-row"><label>סף מס יסף (${year})</label><span class="computed-value">${formatNumber(TAX_DATA.surtaxThreshold[year])}</span><span class="unit">₪</span></div>
+    <div class="form-row"><label>מס יסף חייב</label><span class="computed-value ${r.surtax > 0 ? 'negative' : ''}">${formatNumber(r.surtax)}</span><span class="unit">₪</span></div>
+  </div>`;
+
+  // ---- FINAL CALCULATION ----
+  html += `<div class="section-card" id="final_${year}" style="border-color:var(--accent);border-width:2px">
+    <div class="section-title">✅ חישוב סופי — החזר / חוב מס ${year}</div>
+
+    <div class="form-row"><label>מס לפי מדרגות (לפני זיכויים)</label><span class="computed-value">${formatNumber(r.taxBeforeCredits)}</span><span class="unit">₪</span></div>
+    <div class="form-row"><label>(-) שווי נקודות זיכוי</label><span class="computed-value positive">${formatNumber(r.creditPointsValue)}</span><span class="unit">₪</span></div>
+    <div class="form-row"><label>(-) זיכויים נוספים</label><span class="computed-value positive">${formatNumber(r.totalAdditionalCredits)}</span><span class="unit">₪</span></div>
+    <div class="form-row" style="font-weight:600"><label>מס נטו לתשלום</label><span class="computed-value negative">${formatNumber(r.netTaxOwed)}</span><span class="unit">₪</span></div>
+    <div class="form-row"><label>מס ששולם בפועל (ניכוי במקור)</label><span class="computed-value">${formatNumber(r.totalTaxPaid)}</span><span class="unit">₪</span></div>
+
+    <div style="border-top:2px solid var(--border);margin-top:12px;padding-top:12px">
+      <div class="form-row"><label>--- פיצויים ---</label><span></span><span></span></div>
+      <div class="form-row"><label>החזר/(חוב) מס על פיצויים</label><span class="computed-value ${r.severanceRefund >= 0 ? 'positive':'negative'}">${formatNumber(r.severanceRefund)}</span><span class="unit">₪</span></div>
+      <div class="form-row"><label>--- הכנסות הון ---</label><span></span><span></span></div>
+      <div class="form-row"><label>החזר/(חוב) הון</label><span class="computed-value ${r.capitalRefundAdjusted >= 0 ? 'positive':'negative'}">${formatNumber(r.capitalRefundAdjusted)}</span><span class="unit">₪</span></div>
+      <div class="form-row"><label>--- אופציות ---</label><span></span><span></span></div>
+      <div class="form-row"><label>החזר/(חוב) מס על אופציות</label><span class="computed-value ${r.optRefund >= 0 ? 'positive':'negative'}">${formatNumber(r.optRefund)}</span><span class="unit">₪</span></div>
+      <div class="form-row"><label>(+) מס יסף (3%)</label><span class="computed-value negative">${formatNumber(r.surtax)}</span><span class="unit">₪</span></div>
+      <div class="form-row"><label>(+) מס על שכירות דירה</label><span class="computed-value negative">${formatNumber(r.rentalTax)}</span><span class="unit">₪</span></div>
+    </div>
+
+    <div class="summary-row total" style="background:${r.totalRefund >= 0 ? 'var(--success-bg)' : 'var(--danger-bg)'};font-size:1.2rem">
+      <label>${r.totalRefund >= 0 ? '🎉 החזר מס' : '⚠️ חוב מס'}</label>
+      <span class="computed-value ${r.totalRefund >= 0 ? 'positive' : 'negative'}" style="font-size:1.3rem">${r.totalRefund >= 0 ? '+' : ''}${formatNumber(r.totalRefund)}</span>
+      <span class="unit">₪</span>
+    </div>
+    <div style="text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:8px">
+      חיובי = מגיע לך החזר  |  שלילי = חוב מס
+    </div>
+    ${r.totalRefund > 0 ? (() => {
+      // הצמדה וריבית — 4% שנתי מסוף שנת המס עד היום
+      const taxYearEnd = new Date(year, 11, 31); // 31 Dec of tax year
+      const today = new Date();
+      const msPerYear = 365.25 * 24 * 60 * 60 * 1000;
+      const yearsFraction = Math.max(0, (today - taxYearEnd) / msPerYear);
+      const indexationRate = 0.04;
+      const indexationAmount = Math.floor(r.totalRefund * indexationRate * yearsFraction);
+      const totalWithIndexation = r.totalRefund + indexationAmount;
+      return `<div style="margin-top:12px;padding:12px;background:var(--purple-bg);border-radius:8px;border:1px solid rgba(139,92,246,0.2)">
+        <div style="font-size:0.85rem;color:var(--purple);font-weight:600;margin-bottom:8px">📈 הצמדה וריבית (הערכה)</div>
+        <div class="form-row"><label>תקופה מסוף ${year} עד היום</label><span class="computed-value">${yearsFraction.toFixed(2)} שנים</span><span class="unit"></span></div>
+        <div class="form-row"><label>ריבית והצמדה (4% שנתי)</label><span class="computed-value positive">+${formatNumber(indexationAmount)}</span><span class="unit">₪</span></div>
+        <div class="form-row" style="font-weight:600"><label>החזר כולל הצמדה (הערכה)</label><span class="computed-value positive" style="font-size:1.1rem">+${formatNumber(totalWithIndexation)}</span><span class="unit">₪</span></div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">* הערכה בלבד — הסכום בפועל נקבע ע"י פקיד השומה לפי מדד בפועל</div>
+      </div>`;
+    })() : ''}
+  </div>`;
+
+  // Placeholders for async upload section and checklist
+  html += `<div id="uploadContainer_${year}"><div class="section-card" style="text-align:center;color:var(--text-muted);padding:24px">טוען מסמכים...</div></div>`;
+  html += `<div id="checklistContainer_${year}">${buildYearChecklist(year)}</div>`;
+
+  return html;
+}
+
+// Populate upload section async after panel renders
+async function populateUploadSection(year) {
+  const container = document.getElementById('uploadContainer_' + year);
+  if (!container) return;
+  const uploadHtml = await buildUploadSection(year);
+  container.innerHTML = uploadHtml;
+}
+
+function buildSummaryPanel() {
+  const {results, lossTracker, adjusted} = calcSummary();
+
+  // Top stats
+  let totalRefund = 0, yearsWithRefund = 0;
+  let totalLossBalance = 0;
+  years.forEach(y => {
+    totalRefund += adjusted[y].totalRefund;
+    if (adjusted[y].totalRefund > 0) yearsWithRefund++;
+  });
+  totalLossBalance = lossTracker[2025]?.endBalance || 0;
+
+  let html = `<div class="stats-grid">
+    <div class="stat-card ${totalRefund >= 0 ? 'positive' : 'negative'}">
+      <div class="stat-value">${totalRefund >= 0 ? '+' : ''}${formatNumber(totalRefund)}</div>
+      <div class="stat-label">סה"כ החזר מתואם</div>
+    </div>
+    <div class="stat-card info">
+      <div class="stat-value">${yearsWithRefund}</div>
+      <div class="stat-label">שנים עם החזר</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-value">${formatNumber(totalLossBalance)}</div>
+      <div class="stat-label">הפסדי הון מועברים</div>
+    </div>
+  </div>`;
+
+  // Part A: Year data
+  html += `<div class="section-card">
+    <div class="section-title">📋 חלק א׳: נתוני שנה</div>
+    <table class="data-table">
+      <thead><tr><th></th>`;
+  years.forEach(y => html += `<th>${y}</th>`);
+  html += `<th>סה"כ</th></tr></thead><tbody>`;
+
+  const rows = [
+    {label:'הכנסה חייבת מעבודה', key: y => formatNumber(results[y].totalWorkIncome)},
+    {label:'מס נטו לתשלום', key: y => formatNumber(results[y].netTaxOwed)},
+    {label:'מס ששולם בפועל', key: y => formatNumber(results[y].totalTaxPaid)},
+    {label:'הכנסות הון נטו', key: y => formatNumber(results[y].totalCapitalIncome)},
+    {label:'פיצויים — החזר/(חוב)', key: y => formatNumber(results[y].severanceRefund)},
+    {label:'מס יסף', key: y => formatNumber(results[y].surtax)},
+  ];
+  rows.forEach(row => {
+    html += `<tr><td style="font-weight:600">${row.label}</td>`;
+    let total = 0;
+    years.forEach(y => {
+      html += `<td>${row.key(y)}</td>`;
+    });
+    html += `<td></td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Part B: Loss carryforward
+  html += `<div class="section-card">
+    <div class="section-title">📈 חלק ב׳: מעקב הפסדי הון בין שנים</div>
+    <table class="data-table">
+      <thead><tr><th></th>`;
+  years.forEach(y => html += `<th>${y}</th>`);
+  html += `</tr></thead><tbody>`;
+
+  // Reconstruct loss tracker properly
+  let cf = 0;
+  const lt2 = {};
+  years.forEach(y => {
+    const s = state[y];
+    const r = results[y];
+    const beginning = cf;
+    const newLoss = (s.capitalLossCarryforward||0) + (r.totalCapitalIncome < 0 ? -r.totalCapitalIncome : 0);
+    const available = beginning + newLoss;
+    const used = Math.min(available, Math.max(r.totalCapitalIncome, 0));
+    cf = available - used;
+    lt2[y] = {beginning, newLoss, available, used, end: cf, savings: used * 0.25};
+  });
+
+  const lossRows = [
+    {label:'יתרת הפסדים — תחילת שנה', key: y => formatNumber(lt2[y].beginning)},
+    {label:'(+) הפסדי הון חדשים', key: y => formatNumber(lt2[y].newLoss)},
+    {label:'סה"כ זמינים לקיזוז', key: y => formatNumber(lt2[y].available)},
+    {label:'הפסד מועבר שנוצל', key: y => formatNumber(lt2[y].used)},
+    {label:'יתרת הפסדים — סוף שנה', key: y => formatNumber(lt2[y].end)},
+    {label:'חיסכון מס מקיזוז', key: y => formatNumber(lt2[y].savings)},
+  ];
+  lossRows.forEach(row => {
+    html += `<tr><td style="font-weight:600">${row.label}</td>`;
+    years.forEach(y => html += `<td>${row.key(y)}</td>`);
+    html += `</tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Part C: Adjusted refunds
+  html += `<div class="section-card">
+    <div class="section-title">✅ חלק ג׳: החזר מס מתואם</div>
+    <table class="data-table">
+      <thead><tr><th></th>`;
+  years.forEach(y => html += `<th>${y}</th>`);
+  html += `<th>סה"כ</th></tr></thead><tbody>`;
+
+  const adjRows = [
+    {label:'החזר/(חוב) מס שכר', key:'workRefund'},
+    {label:'החזר/(חוב) פיצויים', key:'severanceRefund'},
+    {label:'החזר/(חוב) אופציות', key:'optRefund'},
+    {label:'החזר/(חוב) הון מתואם', key:'capitalRefund'},
+    {label:'(-) מס יסף', key:'surtax'},
+    {label:'(-) מס שכירות', key:'rentalTax'},
+  ];
+  adjRows.forEach(row => {
+    html += `<tr><td style="font-weight:600">${row.label}</td>`;
+    let total = 0;
+    years.forEach(y => {
+      const val = adjusted[y][row.key];
+      total += val;
+      html += `<td style="color:${val >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatNumber(val)}</td>`;
+    });
+    html += `<td style="font-weight:700">${formatNumber(total)}</td></tr>`;
+  });
+
+  // Total refund row
+  html += `<tr style="background:var(--accent-light);font-weight:700;font-size:1rem">
+    <td>החזר מס / (חוב מס) — מתואם</td>`;
+  let grandTotal = 0;
+  years.forEach(y => {
+    const val = adjusted[y].totalRefund;
+    grandTotal += val;
+    html += `<td style="color:${val >= 0 ? 'var(--success)' : 'var(--danger)'}">${val >= 0 ? '+' : ''}${formatNumber(val)}</td>`;
+  });
+  html += `<td style="color:${grandTotal >= 0 ? 'var(--success)' : 'var(--danger)'}; font-size:1.1rem">${grandTotal >= 0 ? '+' : ''}${formatNumber(grandTotal)}</td></tr>`;
+  html += `</tbody></table></div>`;
+
+  // Chart - Bar chart
+  html += `<div class="chart-container">
+    <div class="section-title">📊 החזר/(חוב) מס מתואם לפי שנה</div>
+    <div class="bar-chart">`;
+  const maxVal = Math.max(...years.map(y => Math.abs(adjusted[y].totalRefund)), 1);
+  years.forEach(y => {
+    const val = adjusted[y].totalRefund;
+    const height = Math.max(Math.abs(val) / maxVal * 160, 2);
+    const cls = val > 0 ? 'positive' : (val < 0 ? 'negative' : 'zero');
+    html += `<div class="bar-group">
+      <div class="bar ${cls}" style="height:${height}px"></div>
+      <div class="bar-label">${y}</div>
+      <div class="bar-value">${val >= 0 ? '+' : ''}${formatNumber(val)} ₪</div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  // Loss carryforward chart
+  html += `<div class="chart-container">
+    <div class="section-title">📉 יתרת הפסדי הון מצטברים</div>
+    <div class="bar-chart">`;
+  const maxLoss = Math.max(...years.map(y => lt2[y].end), 1);
+  years.forEach(y => {
+    const val = lt2[y].end;
+    const height = maxLoss > 0 ? Math.max(val / maxLoss * 160, 2) : 2;
+    html += `<div class="bar-group">
+      <div class="bar" style="height:${height}px;background:linear-gradient(180deg,var(--purple),#6d28d9)"></div>
+      <div class="bar-label">${y}</div>
+      <div class="bar-value">${formatNumber(val)} ₪</div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  html += `<div class="tip-box">💡 חישוב המס ההוני מבוסס על שיעור מס יחסי לפי תמהיל ההכנסות. חיסכון המס מקיזוז הפסדים מועברים כבר משתקף בשורת ההחזר המתואמת.</div>`;
+
+  return html;
+}
+
+function buildPlanningPanel() {
+  let html = `<div class="section-card">
+    <div class="section-title">📋 מדריך תכנון מס אופטימלי</div>
+    <div class="tip-box warning">⚠️ מדריך זה מיועד להכוונה כללית בלבד. לתכנון מס מורכב — התייעצו עם יועץ מס מוסמך.</div>
+  </div>`;
+
+  const topics = [
+    {title:'1️⃣ הכנסות משכירות דירה', content:`
+      <table class="data-table">
+        <thead><tr><th>מסלול</th><th>איך עובד</th><th>למי מתאים</th></tr></thead>
+        <tbody>
+          <tr><td>פטור (1)</td><td>פטור מלא עד תקרה חודשית. מעל — פטור חלקי.</td><td>שכ"ד נמוך מהתקרה</td></tr>
+          <tr><td>10% (2)</td><td>10% מהשקל הראשון. ללא ניכוי הוצאות.</td><td>שכ"ד גבוה + אין הכנסות אחרות</td></tr>
+          <tr><td>מדרגות (3)</td><td>מס שולי. מאפשר ניכוי כל ההוצאות.</td><td>הכנסות אחרות נמוכות + הוצאות גבוהות</td></tr>
+        </tbody>
+      </table>
+      <div class="tip-box">💡 המחשבון משווה אוטומטית בין 3 המסלולים ומציג את הזול ביותר.</div>`},
+    {title:'2️⃣ פיצויי פיטורים ומענקי פרישה', content:`
+      <table class="data-table">
+        <thead><tr><th>אפשרות</th><th>הסבר</th><th>מתי כדאי</th></tr></thead>
+        <tbody>
+          <tr><td>פטור עד תקרה</td><td>פטור על משכורת × שנות עבודה, עד תקרה</td><td>תמיד — ודאו פטור נכון</td></tr>
+          <tr><td>פריסת מס</td><td>פיצויים מעל תקרה — פריסה לשנים קודמות</td><td>שנים עם הכנסה נמוכה</td></tr>
+          <tr><td>רצף פיצויים</td><td>להשאיר בקופה ולצרף למעסיק הבא</td><td>מעבר בין עבודות</td></tr>
+        </tbody>
+      </table>`},
+    {title:'3️⃣ הכנסות הון וניירות ערך', content:`
+      <table class="data-table">
+        <thead><tr><th>נושא</th><th>הסבר</th><th>מה לבדוק</th></tr></thead>
+        <tbody>
+          <tr><td>קיזוז הפסדים</td><td>הפסדים מקזזים רווחים. יתרות עוברות לשנה הבאה.</td><td>גיליון הסיכום מחשב אוטומטית</td></tr>
+          <tr><td>גיל 60+</td><td>הכנסות פסיביות ממוסות לפי מדרגות במקום 25%</td><td>סמנו ״גיל 60+״ בשנת המס הרלוונטית</td></tr>
+          <tr><td>אופציות 102</td><td>מסלול הוני = 25%. פירותי = שולי.</td><td>בדקו טופס 161</td></tr>
+        </tbody>
+      </table>`},
+    {title:'4️⃣ נקודות זיכוי — מה אנשים שוכחים', content:`
+      <table class="data-table">
+        <thead><tr><th>נקודה</th><th>שווי (2024)</th><th>מה לבדוק</th></tr></thead>
+        <tbody>
+          <tr><td>חייל משוחרר</td><td>5,808 ₪</td><td>עד 36 חודש מהשחרור</td></tr>
+          <tr><td>תואר ראשון</td><td>2,904 ₪</td><td>רטרואקטיבי!</td></tr>
+          <tr><td>עולה חדש</td><td>עד 13,068 ₪</td><td>18 חודשים</td></tr>
+          <tr><td>ילדים 0-5</td><td>4,356 ₪/ילד</td><td>חלקי שנה אם נולד באמצע</td></tr>
+          <tr><td>ישוב מזכה</td><td>עד 2,904 ₪</td><td>בדקו רשימה מעודכנת</td></tr>
+        </tbody>
+      </table>`},
+    {title:'5️⃣ רשימת בדיקה עצמית', content:`
+      <table class="data-table">
+        <thead><tr><th>שאלה</th><th>למה חשוב</th><th>מה לעשות</th></tr></thead>
+        <tbody>
+          <tr><td>מספר מעסיקים?</td><td>פיצול מקטין מס</td><td>הגישו דוח לתיאום</td></tr>
+          <tr><td>שינוי תעסוקה?</td><td>הפקדות פנסיה מזכות</td><td>אספו אישורים</td></tr>
+          <tr><td>ימי מילואים?</td><td>שכר מילואים חייב במס</td><td>הזינו בטופס</td></tr>
+          <tr><td>תרומות?</td><td>35% זיכוי מעל 190 ₪</td><td>שמרו קבלות</td></tr>
+          <tr><td>הפסד הון?</td><td>מקזז רווחים</td><td>הזינו בטופס</td></tr>
+          <tr><td>מעל סף מס יסף?</td><td>3% נוסף</td><td>שקלו דחיית הכנסות</td></tr>
+        </tbody>
+      </table>`},
+    {title:'6️⃣ לוח זמנים ומועדים', content:`
+      <table class="data-table">
+        <thead><tr><th>מועד</th><th>פירוט</th><th>הערות</th></tr></thead>
+        <tbody>
+          <tr><td>6 שנים להחזר</td><td>התקופה להגשת דוח להחזר מס</td><td>לשנת 2020 = עד סוף 2026!</td></tr>
+          <tr><td>ריבית 4% + הצמדה</td><td>החזר נושא ריבית שנתית</td><td>כל שנה מגדילה ההחזר</td></tr>
+          <tr><td>טופס 106</td><td>עד 31 במרץ</td><td>בקשו מהמעסיק</td></tr>
+          <tr><td>טופס 867</td><td>עד 31 במרץ</td><td>בקשו מהבנק</td></tr>
+        </tbody>
+      </table>`},
+  ];
+
+  topics.forEach(t => {
+    html += `<div class="section-card">
+      <div class="section-title">${t.title}</div>
+      ${t.content}
+    </div>`;
+  });
+
+  return html;
+}
+
+// =============================================
+// RENDER & EVENT HANDLING
+// =============================================
+function renderAllPanels() {
+  const container = document.getElementById('panelContainer');
+  let html = '';
+
+  html += `<div class="tab-panel active" data-panel="docs">${buildDocsPanel()}</div>`;
+  html += `<div class="tab-panel" data-panel="ref">${buildRefPanel()}</div>`;
+  years.forEach(y => {
+    html += `<div class="tab-panel" data-panel="y${y}">${buildYearPanel(y)}</div>`;
+  });
+  html += `<div class="tab-panel" data-panel="summary">${buildSummaryPanel()}</div>`;
+  html += `<div class="tab-panel" data-panel="planning">${buildPlanningPanel()}</div>`;
+
+  container.innerHTML = html;
+  attachInputListeners();
+  // Populate upload sections async for all years
+  years.forEach(y => populateUploadSection(y));
+}
+
+function renderCurrentTab() {
+  const activeTab = document.querySelector('.tab.active');
+  const tabId = activeTab?.dataset.tab;
+  if (!tabId) return;
+
+  const panel = document.querySelector(`[data-panel="${tabId}"]`);
+  if (!panel) return;
+
+  if (tabId.startsWith('y')) {
+    const year = parseInt(tabId.slice(1));
+    panel.innerHTML = buildYearPanel(year);
+    populateUploadSection(year);
+  } else if (tabId === 'summary') {
+    panel.innerHTML = buildSummaryPanel();
+  } else if (tabId === 'docs') {
+    panel.innerHTML = buildDocsPanel();
+  }
+  attachInputListeners();
+}
+
+function attachInputListeners() {
+  document.querySelectorAll('input[data-year], select[data-year]').forEach(el => {
+    if (el.tagName === 'SELECT') {
+      el.addEventListener('change', function() {
+        const year = parseInt(this.dataset.year);
+        const key = this.dataset.key;
+        state[year][key] = parseInt(this.value);
+        autoSave();
+        renderCurrentTab();
+      });
+    } else if (el.tagName === 'INPUT') {
+      // On blur: evaluate formula if present, then update
+      el.addEventListener('blur', function() {
+        const year = parseInt(this.dataset.year);
+        const key = this.dataset.key;
+        const raw = this.value.trim();
+
+        // Check if it's a formula (contains +, -, *, / with digits)
+        if (raw && /[+\-*/]/.test(raw) && /\d/.test(raw)) {
+          const result = evalFormula(raw);
+          if (result !== null) {
+            state[year][key] = result;
+            state[year]['_formula_' + key] = raw;
+            this.value = raw;
+            this.title = 'נוסחה: ' + raw + ' = ' + result.toLocaleString('he-IL');
+            this.classList.add('has-formula');
+            autoSave();
+            renderCurrentTab();
+            return;
+          }
+        }
+
+        // Plain number
+        const val = parseFloat(raw.replace(/,/g, '')) || 0;
+        state[year][key] = val;
+        delete state[year]['_formula_' + key];
+        this.classList.remove('has-formula');
+        autoSave();
+        renderCurrentTab();
+      });
+      // On input: update state in real-time (for plain numbers)
+      el.addEventListener('input', function() {
+        const year = parseInt(this.dataset.year);
+        const key = this.dataset.key;
+        const raw = this.value.trim();
+        // Only update if it's a plain number (not mid-formula)
+        if (!/[+\-*/]/.test(raw)) {
+          state[year][key] = parseFloat(raw.replace(/,/g, '')) || 0;
+        }
+      });
+      // On focus: if has formula, show the formula for editing
+      el.addEventListener('focus', function() {
+        const year = parseInt(this.dataset.year);
+        const key = this.dataset.key;
+        const formula = state[year]['_formula_' + key];
+        if (formula) {
+          this.value = formula;
+        }
+      });
+    }
+  });
+}
+
+// Tab switching
+document.getElementById('mainTabs').addEventListener('click', function(e) {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+  tab.classList.add('active');
+  const panel = document.querySelector(`[data-panel="${tab.dataset.tab}"]`);
+  if (panel) {
+    panel.classList.add('active');
+    renderCurrentTab();
+  }
+});
+
+// Scroll to section
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('taxCalcTheme', next);
+}
+
+// Document checklist
+function toggleDoc(id, checkbox) {
+  const docs = JSON.parse(localStorage.getItem('taxCalc_docs_' + currentClientId) || '{}');
+  docs[id] = checkbox.checked;
+  localStorage.setItem('taxCalc_docs_' + currentClientId, JSON.stringify(docs));
+
+  const item = checkbox.closest('.checklist-item');
+  item.classList.toggle('checked', checkbox.checked);
+
+  // Update count
+  const total = document.querySelectorAll('.checklist-item').length;
+  const checked = Object.values(docs).filter(v=>v).length;
+  const countEl = document.getElementById('docsCount');
+  const percentEl = document.getElementById('docsPercent');
+  const progressEl = document.getElementById('docsProgress');
+  if (countEl) countEl.textContent = `${checked}/${total}`;
+  if (percentEl) percentEl.textContent = `${Math.round(checked/total*100)}%`;
+  if (progressEl) progressEl.style.width = `${checked/total*100}%`;
+}
+
+// Export/Import
+function exportData() {
+  const client = getCurrentClient();
+  const exportObj = { clientName: client?.name || '', data: state };
+  const data = JSON.stringify(exportObj, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = (client?.name || 'client').replace(/[^a-zA-Z0-9֐-׿]/g, '_');
+  a.href = url;
+  a.download = `tax-refund-${safeName}-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('קובץ נשמר — ' + (client?.name || ''));
+}
+
+function printReport() {
+  // Show a print header with client name and date
+  const client = getCurrentClient();
+  const clientName = client?.name || '';
+  let header = document.getElementById('print-header');
+  if (!header) {
+    header = document.createElement('div');
+    header.id = 'print-header';
+    header.className = 'print-header';
+    header.style.display = 'none';
+    document.body.prepend(header);
+  }
+  header.innerHTML = `<h1>דוח החזר מס — ${clientName || 'ללא שם'}</h1><p>הופק בתאריך: ${new Date().toLocaleDateString('he-IL')} | שנות מס: ${years.join(', ')}</p>`;
+
+  // Mark the summary tab as print-active so it shows in print
+  const panes = document.querySelectorAll('.tab-pane');
+  const summaryTab = document.getElementById('tab-summary');
+  panes.forEach(p => p.classList.remove('print-active'));
+  if (summaryTab) summaryTab.classList.add('print-active');
+
+  // Also show each year tab in print
+  years.forEach(y => {
+    const yearTab = document.getElementById('tab-' + y);
+    if (yearTab) yearTab.classList.add('print-active');
+  });
+
+  window.print();
+
+  // Cleanup after print
+  setTimeout(() => {
+    panes.forEach(p => p.classList.remove('print-active'));
+  }, 1000);
+}
+
+function importData() {
+  document.getElementById('fileInput').click();
+}
+
+function handleImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      // Support both old format (direct state) and new format ({clientName, data})
+      const data = parsed.data || parsed;
+      years.forEach(y => {
+        if (data[y]) Object.assign(state[y], data[y]);
+      });
+      autoSave();
+      renderAllPanels();
+      showToast('נתונים נטענו — ' + (getCurrentClient()?.name || ''));
+    } catch(err) {
+      showToast('שגיאה בטעינת הקובץ');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// Toast
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// =============================================
+// INIT
+// =============================================
+async function init() {
+  // Load theme
+  const savedTheme = localStorage.getItem('taxCalcTheme');
+  if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+  // Open IndexedDB for file storage
+  try { await openDB(); } catch(e) { console.warn('IndexedDB unavailable:', e); }
+
+  // Load clients and state
+  loadClients();
+  initState();
+  renderClientList();
+  updateClientBadge();
+  renderAllPanels();
+}
+
+init();
+</script>
+<div id="installBanner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 24px;border-radius:12px;cursor:pointer;font-weight:600;font-size:0.95rem;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:9999;direction:rtl" onclick="installPWA()">📲 התקן אפליקציה</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(r => console.log('SW registered')).catch(e => console.warn('SW failed:', e));
+}
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').style.display = 'block';
+});
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r => {
+    document.getElementById('installBanner').style.display = 'none';
+    deferredPrompt = null;
+  });
+}
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBanner').style.display = 'none';
+});
+</script>
+</body>
+</html>

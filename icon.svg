@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0a0e17"/>
+  <rect x="40" y="40" width="432" height="432" rx="60" fill="#111827" stroke="#22c55e" stroke-width="4"/>
+  <text x="256" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="160" font-weight="bold" fill="#22c55e">₪</text>
+  <text x="256" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="60" font-weight="600" fill="#e2e8f0">החזר מס</text>
+  <rect x="120" y="350" width="272" height="8" rx="4" fill="#22c55e" opacity="0.3"/>
+  <rect x="120" y="350" width="180" height="8" rx="4" fill="#22c55e"/>
+  <circle cx="390" y="400" r="30" fill="none" stroke="#22c55e" stroke-width="4" opacity="0.5"/>
+  <path d="M380 400 L388 408 L402 392" stroke="#22c55e" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
